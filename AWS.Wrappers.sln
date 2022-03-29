@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32319.34
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AWS.Wrappers.S3", "AWS.Wrappers.S3\AWS.Wrappers.S3.csproj", "{11F53FFB-DF45-4875-9BE3-4B7998F0D02E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AWS.Wrappers.S3.Tests", "AWS.Wrappers.S3.Tests\AWS.Wrappers.S3.Tests.csproj", "{3F52D080-F15C-4124-ACC7-BE2A4EB4802A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{11F53FFB-DF45-4875-9BE3-4B7998F0D02E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{11F53FFB-DF45-4875-9BE3-4B7998F0D02E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{11F53FFB-DF45-4875-9BE3-4B7998F0D02E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{11F53FFB-DF45-4875-9BE3-4B7998F0D02E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3F52D080-F15C-4124-ACC7-BE2A4EB4802A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3F52D080-F15C-4124-ACC7-BE2A4EB4802A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3F52D080-F15C-4124-ACC7-BE2A4EB4802A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3F52D080-F15C-4124-ACC7-BE2A4EB4802A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {05E0F8CF-543B-4485-8BD0-D22670DC6967}
+	EndGlobalSection
+EndGlobal
