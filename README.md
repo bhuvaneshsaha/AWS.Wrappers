@@ -1,6 +1,7 @@
 ﻿
 # AWS Wrappers S3 (AWSWS3)
 
+[![.NET](https://github.com/bhuvaneshsaha/AWS.Wrappers/actions/workflows/dotnet.yml/badge.svg)](https://github.com/bhuvaneshsaha/AWS.Wrappers/actions/workflows/dotnet.yml)
 
 AWS Wrappers is a straight-forward **.NET 6 C# class library** that is built on top of AWS libraries, which are provided by Amazon Web Services.
 
