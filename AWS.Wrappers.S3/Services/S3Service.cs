@@ -87,11 +87,11 @@ public class S3Service : IS3Service
     {
         try
         {
-            var respone = _s3Client.PutBucketAsync(bucketName).GetAwaiter().GetResult();
+            var response = _s3Client.PutBucketAsync(bucketName).GetAwaiter().GetResult();
 
-            if (respone.HttpStatusCode != System.Net.HttpStatusCode.OK)
+            if (response.HttpStatusCode != System.Net.HttpStatusCode.OK)
             {
-                throw new ArgumentException(respone.ResponseMetadata.ToString());
+                throw new ArgumentException(response.ResponseMetadata.ToString());
             }
         }
         catch
@@ -100,9 +100,64 @@ public class S3Service : IS3Service
         }
     }
 
-    public void CreateDirectory(string bucketName, string folderName)
+    public async Task CreateDirectoryAsync(string bucketName, string path)
     {
-        throw new NotImplementedException();
+        try
+        {
+            path = PathFormat(path);
+            
+            if (await IsDirectoryExistsAsync(bucketName, path)) return;
+
+            var request = new PutObjectRequest()
+            {
+                BucketName = bucketName,
+                StorageClass = S3StorageClass.Standard,
+                ServerSideEncryptionMethod = ServerSideEncryptionMethod.None,
+                Key = path,
+                ContentBody = string.Empty
+            };
+
+            var response = await _s3Client.PutObjectAsync(request);
+
+            if (response.HttpStatusCode != System.Net.HttpStatusCode.OK)
+            {
+                throw new ArgumentException(response.ResponseMetadata.ToString());
+            }
+        }
+        catch
+        {
+            throw;
+        }
+    }
+
+    public void CreateDirectory(string bucketName, string path)
+    {
+        try
+        {
+            path = PathFormat(path);
+
+            if (IsDirectoryExists(bucketName, path)) return;
+
+            var request = new PutObjectRequest()
+            {
+                BucketName = bucketName,
+                StorageClass = S3StorageClass.Standard,
+                ServerSideEncryptionMethod = ServerSideEncryptionMethod.None,
+                Key = path,
+                ContentBody = string.Empty
+            };
+
+            var response = _s3Client.PutObjectAsync(request).GetAwaiter().GetResult();
+
+            if (response.HttpStatusCode != System.Net.HttpStatusCode.OK)
+            {
+                throw new ArgumentException(response.ResponseMetadata.ToString());
+            }
+        }
+        catch
+        {
+            throw;
+        }
     }
 
     public async Task DeleteBucketAsync(string bucketName)
@@ -150,9 +205,84 @@ public class S3Service : IS3Service
         }
     }
 
-    public bool DeleteDirectory(string bucketName, string folderName, bool recursive = false)
+    public async Task DeleteDirectoryAsync(string bucketName, string path, bool recursive = false)
     {
-        throw new NotImplementedException();
+        try
+        {
+            path = PathFormat(path);
+
+            if (! await IsDirectoryExistsAsync(bucketName, path))
+            {
+                return;
+            }
+
+            var subFolders = await GetSubDirectoriesAsync(bucketName, path);
+            //Todo: Need to modify after implementing GetFiles
+            //var files = GetFiles(bucketName, path);
+
+            //if (!recursive && subFolders?.Count > 0 || files?.Count > 0)
+            if (!recursive && subFolders?.Count > 0)
+            {
+                throw new InvalidOperationException("The directory is not empty. Try recrusive = true to delete recrusively.");
+            }
+
+            DeleteObjectRequest deleteObject = new DeleteObjectRequest
+            {
+                BucketName = bucketName,
+                Key = path,
+            };
+
+            var response = await _s3Client.DeleteObjectAsync(deleteObject);
+
+            if (response.HttpStatusCode != System.Net.HttpStatusCode.NoContent || response.HttpStatusCode != System.Net.HttpStatusCode.OK)
+            {
+                throw new ArgumentException(response.ResponseMetadata.ToString());
+            }
+        }
+        catch
+        {
+            throw;
+        }
+    }
+
+    public void DeleteDirectory(string bucketName, string path, bool recursive = false)
+    {
+        try
+        {
+            path = PathFormat(path);
+
+            if (!IsDirectoryExists(bucketName, path))
+            {
+                return;
+            }
+
+            var subFolders = GetSubDirectories(bucketName, path);
+            //Todo: Need to modify after implementing GetFiles
+            //var files = GetFiles(bucketName, path);
+
+            //if (!recursive && subFolders?.Count > 0 || files?.Count > 0)
+            if (!recursive && subFolders?.Count > 0)
+            {
+                throw new InvalidOperationException("The directory is not empty. Try recrusive = true to delete recrusively.");
+            }
+
+            DeleteObjectRequest deleteObject = new DeleteObjectRequest
+            {
+                BucketName = bucketName,
+                Key = path,
+            };
+
+            var response = _s3Client.DeleteObjectAsync(deleteObject).GetAwaiter().GetResult();
+
+            if (response.HttpStatusCode != System.Net.HttpStatusCode.NoContent || response.HttpStatusCode != System.Net.HttpStatusCode.OK)
+            {
+                throw new ArgumentException(response.ResponseMetadata.ToString());
+            }
+        }
+        catch
+        {
+            throw;
+        }
     }
 
     public void DeleteFile(string s3Key, string bucketName)
@@ -169,6 +299,166 @@ public class S3Service : IS3Service
     {
         throw new NotImplementedException();
     }
+
+    public async Task<List<string>> GetAllDirectoriesRecursiveAsync(string bucketName, string path)
+    {
+        try
+        {
+            path = PathFormat(path);
+
+            ListObjectsV2Request listObjectsV2 = new ListObjectsV2Request
+            {
+                BucketName = bucketName,
+                Prefix = path,
+                StartAfter = path
+            };
+
+            var response = await _s3Client.ListObjectsV2Async(listObjectsV2);
+
+            var files = new List<string>();
+
+            if (response.HttpStatusCode != System.Net.HttpStatusCode.OK)
+            {
+                throw new ArgumentException(response.ResponseMetadata.ToString());
+            }
+
+            foreach (var item in response.S3Objects)
+            {
+                files.Add(item.Key);
+            }
+
+            return files;
+        }
+        catch
+        {
+            throw;
+        }
+    }
+
+    public List<string> GetAllDirectoriesRecursive(string bucketName, string path)
+    {
+        try
+        {
+            path = PathFormat(path);
+
+            ListObjectsV2Request listObjectsV2 = new ListObjectsV2Request
+            {
+                BucketName = bucketName,
+                Prefix = path,
+                StartAfter = path
+            };
+
+            var response = _s3Client.ListObjectsV2Async(listObjectsV2).GetAwaiter().GetResult();
+
+            var files = new List<string>();
+
+            if (response.HttpStatusCode != System.Net.HttpStatusCode.OK)
+            {
+                throw new ArgumentException(response.ResponseMetadata.ToString());
+            }
+
+            foreach (var item in response.S3Objects)
+            {
+                files.Add(item.Key);
+            }
+
+            return files;
+        }
+        catch
+        {
+            throw;
+        }
+    }
+
+
+    public async Task<List<string>> GetSubDirectoriesAsync(string bucketName, string path)
+    {
+        try
+        {
+            path = PathFormat(path);
+
+            ListObjectsV2Request listObjectsV2 = new ListObjectsV2Request
+            {
+                BucketName = bucketName,
+                Prefix = path,
+                StartAfter = path
+            };
+
+            var response = await _s3Client.ListObjectsV2Async(listObjectsV2);
+
+            var files = new List<string>();
+
+            if (response.HttpStatusCode != System.Net.HttpStatusCode.OK)
+            {
+                throw new ArgumentException(response.ResponseMetadata.ToString());
+            }
+
+            var temp = "";
+            foreach (var item in response.S3Objects)
+            {
+                temp = item.Key.Replace(path, "");
+                if (item.Size == 0)
+                {
+                    temp = temp.Split('/')[0];
+                    if (!files.Contains(temp))
+                    {
+                        files.Add(temp);
+                    }
+                }
+            }
+
+            return files;
+        }
+        catch
+        {
+            throw;
+        }
+    }
+
+    public List<string> GetSubDirectories(string bucketName, string path)
+    {
+        try
+        {
+            path = PathFormat(path);
+
+            ListObjectsV2Request listObjectsV2 = new ListObjectsV2Request
+            {
+                BucketName = bucketName,
+                Prefix = path,
+                StartAfter = path
+            };
+
+            var response = _s3Client.ListObjectsV2Async(listObjectsV2).GetAwaiter().GetResult();
+
+            var files = new List<string>();
+
+            if (response.HttpStatusCode != System.Net.HttpStatusCode.OK)
+            {
+                throw new ArgumentException(response.ResponseMetadata.ToString());
+            }
+
+            var temp = "";
+            foreach (var item in response.S3Objects)
+            {
+                temp = item.Key.Replace(path, "");
+                if (item.Size == 0)
+                {
+                    temp = temp.Split('/')[0];
+                    if (files.Contains(temp))
+                    {
+                        files.Add(temp);
+                    }
+                }
+            }
+
+            return files;
+        }
+        catch
+        {
+            throw;
+        }
+    }
+
 
     public async Task<bool> IsBucketExistsAsync(string bucketName)
     {
@@ -194,9 +484,46 @@ public class S3Service : IS3Service
         }
     }
 
-    public bool IsDirectoryExists(string bucketName, string folderName)
+    public async Task<bool> IsDirectoryExistsAsync(string bucketName, string path)
     {
-        throw new NotImplementedException();
+        try
+        {
+            path = PathFormat(path);
+
+            ListObjectsV2Request request = new ListObjectsV2Request
+            {
+                BucketName = bucketName,
+                Prefix = path
+            };
+
+            var response = await _s3Client.ListObjectsV2Async(request);
+            return (response != null && response.S3Objects != null && response.S3Objects.Count > 0);
+        }
+        catch
+        {
+            throw;
+        }
+    }
+
+    public bool IsDirectoryExists(string bucketName, string path)
+    {
+        try
+        {
+            path = PathFormat(path);
+
+            ListObjectsV2Request request = new ListObjectsV2Request
+            {
+                BucketName = bucketName,
+                Prefix = path
+            };
+
+            var response = _s3Client.ListObjectsV2Async(request).GetAwaiter().GetResult();
+            return (response != null && response.S3Objects != null && response.S3Objects.Count > 0);
+        }
+        catch
+        {
+            throw;
+        }
     }
 
     public bool IsFileExists(string s3Key, string bucketName)
@@ -226,6 +553,23 @@ public class S3Service : IS3Service
     private S3Region GetRegion(string region)
     {
         return new S3Region(region);
+    }
+
+    private string PathFormat(string path)
+    {
+        path = path.Replace("\\", "/");
+        path = path.EndsWith("/") ? path : path +"/";
+        return path;
+    }
+
+    public List<string> GetFiles(string bucketName, string path)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<List<string>> GetFilesAsync(string bucketName, string path)
+    {
+        throw new NotImplementedException();
     }
 
     #endregion
