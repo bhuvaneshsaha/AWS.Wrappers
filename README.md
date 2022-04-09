@@ -10,10 +10,11 @@ The AWS libraries provide all the features needed to perform operations with AWS
 So, AWS Wrappers S3 is designed to do basic operations such as creating buckets, uploading files, creating folders, etc. with the AWS Simple Storage Services (S3) with simple, user-readable methods that already implement the codes required to perform the operation.
 
 ## Usage
+Clone the code from the master branch or download stable release from the release area.
 
-Users can copy the `AWS.Wrappers.S3` class library into their project solution folder and add references (dependencies) to their project, so they can utilize the library.
+You can copy the `AWS.Wrappers.S3` class library into their project solution folder and add references (dependencies) to their project, then you can utilize the library.
 
-If a user prefers their project to have an S3 Wrapper (to have their own project name), they can simply copy the necessary interfaces and classes into their projects.
+If you prefers to have the wrapper classes in their own project, you can simply copy the necessary interfaces and classes into their projects and start working with them.
 
 > The library contains both synchronous and asynchronous methods.
 
@@ -26,10 +27,10 @@ using AWS.Wrappers.S3.Services;
 Creating S3Service Object,
 
 ```
-IS3Service? _S3Service = new S3Service("<AccessKey>", "<SecretKey>", S3Regions.USEast1);
+IS3Service _S3Service = new S3Service("<AccessKey>", "<SecretKey>", S3Regions.USEast1);
 ```
 
-Sample code to create bucket in S3,
+Sample code to create bucket in AWS S3 with S3 Wappers,
 
 _In synchronous,_
 ```
@@ -43,6 +44,12 @@ _In asynchronous,_
     await S3Service.CreateBucketAsync("<new-bucket-name>");
 ```
 
-> Always use code from the master branch or download code from the release area.
-You can find the version information below,
+> Please see the list of methods available in the [Methods list](AWS.Wrappers.S3/Versions/S3WrapperMethodsList.md).
+
+> You can find the version info/change log in the following links:
 >>[Version 1.0.0](AWS.Wrappers.S3/Versions/V1_0_0.md)
+
+## Contribution
+
+Contibution is always welcome. If you would like to contribute to this project, please contact <bhuvaneshmib@gmail.com>.
+

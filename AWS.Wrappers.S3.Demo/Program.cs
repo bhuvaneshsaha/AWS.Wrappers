@@ -17,8 +17,8 @@ public class S3ServiceLocal
 
     public async Task Test()
     {
-        var accessKey = "AKIARPSFPGN4TGNBJUY3";
-        var secretKey = "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";
+        var accessKey = "<AccessKey>";
+        var secretKey = "<SecretKey>";
         IS3Service? s3Service = new S3Service(accessKey, secretKey, S3Regions.USEast1);
 
         var bucketName = "tet-budf-fdafsa3424-fsfa";
