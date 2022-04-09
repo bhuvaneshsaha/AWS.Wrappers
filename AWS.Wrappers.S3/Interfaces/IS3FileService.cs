@@ -35,4 +35,7 @@ public interface IS3FileService
     
     bool IsFileExists(string s3Key, string bucketName);
     void DeleteFile(string s3Key, string bucketName);
+
+    List<string> GetFiles(string bucketName, string path);
+    Task<List<string>> GetFilesAsync(string bucketName, string path);
 }
