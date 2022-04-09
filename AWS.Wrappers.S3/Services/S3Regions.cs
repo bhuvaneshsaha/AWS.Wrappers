@@ -71,4 +71,5 @@ public static class S3Regions
     public static readonly string USIsoWest1 = "us-iso-west-1";
 
     public static readonly string USIsobEast1 = "us-isob-east-1";
+
 }

@@ -3,20 +3,27 @@ namespace AWS.Wrappers.S3.Interfaces;
 public interface IS3BucketService
 {
     /// <summary>
-    /// Creates bucket in the given name if already not exists.
+    /// It creates a bucket with the given name in the same region where the S3 object was created.
     /// Bucket name should be unique across global.
     /// </summary>
     /// <param name="bucketName"></param>
     /// <exception cref="ArgumentException"/>
-    Task CreateBucketAsync(string bucketName, string region = "us-east-1");
+    Task CreateBucketAsync(string bucketName);
 
     /// <summary>
-    /// Creates bucket in the given name if already not exists.
+    /// It creates a bucket with the given name in the same region where the S3 object was created.
     /// Bucket name should be unique across global.
     /// </summary>
     /// <param name="bucketName"></param>
     /// <exception cref="ArgumentException"/>
-    void CreateBucket(string bucketName, string region = "us-east-1");
+    void CreateBucket(string bucketName);
+
+    /// <summary>
+    /// Deletes the bucket if exists
+    /// </summary>
+    /// <param name="bucketName"></param>
+    /// <exception cref="ArgumentException"/>
+    Task DeleteBucketAsync(string bucketName);
 
     /// <summary>
     /// Deletes the bucket if exists
@@ -26,10 +33,18 @@ public interface IS3BucketService
     void DeleteBucket(string bucketName);
 
     /// <summary>
-    /// Check for bucket exists in S3 or not
+    /// Check if bucket exists in S3 or not.
+    /// </summary>
+    /// <param name="bucketName"></param>
+    /// <returns>Exists (True) / Not exists (False)</returns>
+    Task<bool> IsBucketExistsAsync(string bucketName);
+
+    /// <summary>
+    /// Check if bucket exists in S3 or not.
     /// </summary>
     /// <param name="bucketName"></param>
     /// <returns>Exists (True) / Not exists (False)</returns>
     bool IsBucketExists(string bucketName);
+    
 }
 
