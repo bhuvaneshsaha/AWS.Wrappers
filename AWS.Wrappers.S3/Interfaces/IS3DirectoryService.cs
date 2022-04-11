@@ -16,7 +16,7 @@ public interface IS3DirectoryService
     /// <param name="bucketName"></param>
     /// <param name="path"></param>
     /// <returns>Exists (True) / Not exists (False)</returns>
-    Task<bool> IsDirectoryExistsAsync(string bucketName, string path);
+    Task<bool> IsDirectoryExistsAsync(string bucketName, string path, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Create directory inside give bucket if not exits.
@@ -24,7 +24,7 @@ public interface IS3DirectoryService
     /// <param name="bucketName">Name of the bucket where the folder needs to create</param>
     /// <param name="path"></param>
     /// <exception cref="ArgumentException"/>
-    Task CreateDirectoryAsync(string bucketName, string path);
+    Task CreateDirectoryAsync(string bucketName, string path, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Create directory inside give bucket if not exits.
@@ -41,7 +41,7 @@ public interface IS3DirectoryService
     /// <param name="path"></param>
     /// <param name="recursive"></param>
     /// <returns></returns>
-    Task DeleteDirectoryAsync(string bucketName, string path, bool recursive = false);
+    Task DeleteDirectoryAsync(string bucketName, string path, bool recursive = false, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Delete Directory if exists
@@ -58,7 +58,7 @@ public interface IS3DirectoryService
     /// <param name="bucketName"></param>
     /// <param name="path"></param>
     /// <returns></returns>
-    Task<List<string>> GetSubDirectoriesAsync(string bucketName, string path);
+    Task<List<string>> GetSubDirectoriesAsync(string bucketName, string path, CancellationToken cancellationToken = default);
 
 
     /// <summary>
@@ -83,6 +83,6 @@ public interface IS3DirectoryService
     /// <param name="bucketName"></param>
     /// <param name="path"></param>
     /// <returns></returns>
-    Task<List<string>> GetAllDirectoriesRecursiveAsync(string bucketName, string path);
+    Task<List<string>> GetAllDirectoriesRecursiveAsync(string bucketName, string path, CancellationToken cancellationToken = default);
 
 }

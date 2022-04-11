@@ -39,7 +39,6 @@ public class S3Service : IS3Service
         _s3Client = new AmazonS3Client(accessKey, secretKey, endpoint);
     }
 
-
     #endregion
 
     #region Public Methods
@@ -66,11 +65,11 @@ public class S3Service : IS3Service
         throw new NotImplementedException();
     }
 
-    public async Task CreateBucketAsync(string bucketName)
+    public async Task CreateBucketAsync(string bucketName, CancellationToken cancellationToken = default)
     {
         try
         {
-            var respone = await _s3Client.PutBucketAsync(bucketName);
+            var respone = await _s3Client.PutBucketAsync(bucketName, cancellationToken);
 
             if (respone.HttpStatusCode != System.Net.HttpStatusCode.OK)
             {
@@ -100,7 +99,7 @@ public class S3Service : IS3Service
         }
     }
 
-    public async Task CreateDirectoryAsync(string bucketName, string path)
+    public async Task CreateDirectoryAsync(string bucketName, string path, CancellationToken cancellationToken = default)
     {
         try
         {
@@ -117,7 +116,7 @@ public class S3Service : IS3Service
                 ContentBody = string.Empty
             };
 
-            var response = await _s3Client.PutObjectAsync(request);
+            var response = await _s3Client.PutObjectAsync(request, cancellationToken);
 
             if (response.HttpStatusCode != System.Net.HttpStatusCode.OK)
             {
@@ -160,13 +159,13 @@ public class S3Service : IS3Service
         }
     }
 
-    public async Task DeleteBucketAsync(string bucketName)
+    public async Task DeleteBucketAsync(string bucketName, CancellationToken cancellationToken = default)
     {
         try
         {
             if (await IsBucketExistsAsync(bucketName))
             {
-                var response = await _s3Client.DeleteBucketAsync(bucketName);
+                var response = await _s3Client.DeleteBucketAsync(bucketName, cancellationToken);
                 if (response.HttpStatusCode != System.Net.HttpStatusCode.OK)
                 {
                     throw new ArgumentException(response.ResponseMetadata.ToString());
@@ -205,18 +204,18 @@ public class S3Service : IS3Service
         }
     }
 
-    public async Task DeleteDirectoryAsync(string bucketName, string path, bool recursive = false)
+    public async Task DeleteDirectoryAsync(string bucketName, string path, bool recursive = false, CancellationToken cancellationToken = default)
     {
         try
         {
             path = PathFormat(path);
 
-            if (! await IsDirectoryExistsAsync(bucketName, path))
+            if (! await IsDirectoryExistsAsync(bucketName, path, cancellationToken))
             {
                 return;
             }
 
-            var subFolders = await GetSubDirectoriesAsync(bucketName, path);
+            var subFolders = await GetSubDirectoriesAsync(bucketName, path, cancellationToken);
             //Todo: Need to modify after implementing GetFiles
             //var files = GetFiles(bucketName, path);
 
@@ -232,7 +231,7 @@ public class S3Service : IS3Service
                 Key = path,
             };
 
-            var response = await _s3Client.DeleteObjectAsync(deleteObject);
+            var response = await _s3Client.DeleteObjectAsync(deleteObject, cancellationToken);
 
             if (response.HttpStatusCode != System.Net.HttpStatusCode.NoContent || response.HttpStatusCode != System.Net.HttpStatusCode.OK)
             {
@@ -300,7 +299,7 @@ public class S3Service : IS3Service
         throw new NotImplementedException();
     }
 
-    public async Task<List<string>> GetAllDirectoriesRecursiveAsync(string bucketName, string path)
+    public async Task<List<string>> GetAllDirectoriesRecursiveAsync(string bucketName, string path, CancellationToken cancellationToken = default)
     {
         try
         {
@@ -313,7 +312,7 @@ public class S3Service : IS3Service
                 StartAfter = path
             };
 
-            var response = await _s3Client.ListObjectsV2Async(listObjectsV2);
+            var response = await _s3Client.ListObjectsV2Async(listObjectsV2, cancellationToken);
 
             var files = new List<string>();
 
@@ -370,8 +369,7 @@ public class S3Service : IS3Service
         }
     }
 
-
-    public async Task<List<string>> GetSubDirectoriesAsync(string bucketName, string path)
+    public async Task<List<string>> GetSubDirectoriesAsync(string bucketName, string path, CancellationToken cancellationToken = default)
     {
         try
         {
@@ -384,7 +382,7 @@ public class S3Service : IS3Service
                 StartAfter = path
             };
 
-            var response = await _s3Client.ListObjectsV2Async(listObjectsV2);
+            var response = await _s3Client.ListObjectsV2Async(listObjectsV2, cancellationToken);
 
             var files = new List<string>();
 
@@ -459,7 +457,6 @@ public class S3Service : IS3Service
         }
     }
 
-
     public async Task<bool> IsBucketExistsAsync(string bucketName)
     {
         try
@@ -484,7 +481,7 @@ public class S3Service : IS3Service
         }
     }
 
-    public async Task<bool> IsDirectoryExistsAsync(string bucketName, string path)
+    public async Task<bool> IsDirectoryExistsAsync(string bucketName, string path, CancellationToken cancellationToken = default)
     {
         try
         {
@@ -496,7 +493,7 @@ public class S3Service : IS3Service
                 Prefix = path
             };
 
-            var response = await _s3Client.ListObjectsV2Async(request);
+            var response = await _s3Client.ListObjectsV2Async(request, cancellationToken);
             return (response != null && response.S3Objects != null && response.S3Objects.Count > 0);
         }
         catch
@@ -544,6 +541,7 @@ public class S3Service : IS3Service
     #endregion
 
     #region Private Methods
+
     private void ValidateKeyConstructor(string accessKey, string secretKey)
     {
         if (string.IsNullOrEmpty(accessKey)) throw new ArgumentException("Access Key Missing");
@@ -567,7 +565,7 @@ public class S3Service : IS3Service
         throw new NotImplementedException();
     }
 
-    public Task<List<string>> GetFilesAsync(string bucketName, string path)
+    public Task<List<string>> GetFilesAsync(string bucketName, string path, CancellationToken cancellationToken = default)
     {
         throw new NotImplementedException();
     }

@@ -8,7 +8,7 @@ public interface IS3BucketService
     /// </summary>
     /// <param name="bucketName"></param>
     /// <exception cref="ArgumentException"/>
-    Task CreateBucketAsync(string bucketName);
+    Task CreateBucketAsync(string bucketName, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// It creates a bucket with the given name in the same region where the S3 object was created.
@@ -23,7 +23,7 @@ public interface IS3BucketService
     /// </summary>
     /// <param name="bucketName"></param>
     /// <exception cref="ArgumentException"/>
-    Task DeleteBucketAsync(string bucketName);
+    Task DeleteBucketAsync(string bucketName, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Deletes the bucket if exists
