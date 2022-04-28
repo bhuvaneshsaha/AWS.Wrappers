@@ -1,14 +1,14 @@
 ﻿
 ## List of Methods
 
-### Operation Related to buckets
+### Operations Related to buckets
 | Method Name                          | Description                                                                                |
 |--------------------------------------|--------------------------------------------------------------------------------------------|
 | CreateBucketAsync / CreateBucket     | It creates a bucket with the given name in the same region where the S3 object was created |
 | DeleteBucketAsync / DeleteBucket     | Deletes the bucket if exists                                                               |
 | IsBucketExistsAsync / IsBucketExists | Check if bucket exists in S3 or not.                                                       |
 
-### Operation Related to directory/folder _(S3 Object Technically)_
+### Operations Related to directory/folder _(S3 Object Technically)_
 
 | Method Name                                                  | Description                                                                                                                                                                    |
 |--------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
