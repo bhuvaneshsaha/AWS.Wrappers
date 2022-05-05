@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace AWS.Wrappers.S3.Interfaces;
 
 public interface IS3Service : IS3BucketService, IS3BucketServiceAsync,
-    IS3DirectoryService, IS3DirectoryServiceAsync,
-    IS3FileService, IS3FileServiceAsync
+                              IS3DirectoryService, IS3DirectoryServiceAsync,
+                              IS3FileService, IS3FileServiceAsync
 {
 }

@@ -24,4 +24,10 @@
     <ProjectReference Include="..\AWS.Wrappers.S3\AWS.Wrappers.S3.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Files\Upload-File-1.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
