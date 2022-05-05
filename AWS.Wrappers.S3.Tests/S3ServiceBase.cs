@@ -26,8 +26,6 @@ namespace AWS.Wrappers.S3.Tests
         {
             //var accessKey = "<AccessKey>";
             //var secretKey = "<SecretKey>";
-            var accessKey = "AKIARPSFPGN43DNKL5ZQ";
-            var secretKey = "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";
 
             return new S3Service(accessKey, secretKey, S3Regions.USEast1);
         }
