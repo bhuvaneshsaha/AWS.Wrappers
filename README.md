@@ -49,6 +49,12 @@ _In asynchronous,_
 > You can find the version info/change log in the following links:
 >>[Version 1.0.0](AWS.Wrappers.S3/Versions/V1_0_0.md)
 
+## Roadmap
+- Add Async support
+- Add Unit test support
+- Add Sample project
+
+
 ## Contribution
 
 Contibution is always welcome. If you would like to contribute to this project, please contact <bhuvaneshmib@gmail.com>.
