@@ -24,8 +24,8 @@ namespace AWS.Wrappers.S3.Tests
 
         private IS3Service GetS3ServiceObject()
         {
-            //var accessKey = "<AccessKey>";
-            //var secretKey = "<SecretKey>";
+            var accessKey = "<AccessKey>";
+            var secretKey = "<SecretKey>";
 
             return new S3Service(accessKey, secretKey, S3Regions.USEast1);
         }
