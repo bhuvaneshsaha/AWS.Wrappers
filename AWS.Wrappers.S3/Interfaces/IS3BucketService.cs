@@ -23,6 +23,13 @@ public interface IS3BucketService
     /// <param name="bucketName"></param>
     /// <returns>Exists (True) / Not exists (False)</returns>
     bool IsBucketExists(string bucketName);
-    
+
+    /// <summary>
+    /// Remove all object inside bucket<br></br>
+    /// Please be carefull while using this method<br></br>
+    /// </summary>
+    /// <param name="bucketName"></param>
+    void ClearBucket(string bucketName);
+
 }
 

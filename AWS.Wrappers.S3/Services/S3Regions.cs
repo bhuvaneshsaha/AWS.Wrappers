@@ -12,7 +12,6 @@ namespace AWS.Wrappers.S3.Services;
 /// </summary>
 public static class S3Regions
 {
-    //public static readonly string USEast1Regional = "us-east-1-regional";
 
     public static readonly string AFSouth1 = "af-south-1";
 

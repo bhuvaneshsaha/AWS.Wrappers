@@ -10,38 +10,116 @@ namespace AWS.Wrappers.S3.Tests
     public class S3DirectoryServiceTests: S3ServiceBase
     {
         [Fact]
-        public void IsDirectoryExists()
+        public void IsDirectoryExists_SendValidDirectory_ReturnsTrue()
         {
-            var path1 = "A/B/C/E";
-            var result = S3Service.IsDirectoryExists(_bucketName, path1);
+            var dir = "IsDirectoryExistsAsync" + Guid.NewGuid().ToString();
 
-            Assert.True(result);
+            S3Service.CreateDirectory(_bucketName, dir);
+
+            var result = S3Service.IsDirectoryExists(_bucketName, dir);
+
+            Assert.True(result, "IsDirectoryExists - Directory not exists");
+
+            S3Service.DeleteDirectory(_bucketName, dir);
         }
 
         [Fact]
-        public void CreateDirectory()
+        public void IsDirectoryExists_SendInValidDirectory_ReturnsFalse()
         {
-            var folderToCreate = "FolACreate/FolBCreate/FolCCreate";
-            S3Service.CreateDirectory(_bucketName, folderToCreate);
-            var result = S3Service.IsDirectoryExists(_bucketName, folderToCreate);
+            var dir = "IsDirectoryExistsAsync-not-exists-" + Guid.NewGuid().ToString();
 
-            Assert.True(result);
+            var result = S3Service.IsDirectoryExists(_bucketName, dir);
 
-            S3Service.DeleteDirectory(_bucketName, folderToCreate);
+            Assert.False(result, "IsDirectoryExistsAsync - Directory exists");
+
+        }
+
+        [Fact]
+        public void CreateDirectory_SendNewDirectoryName_DirectoryCreated()
+        {
+            var dir = "CreateDirectory" + Guid.NewGuid().ToString();
+
+            S3Service.CreateDirectory(_bucketName, dir);
+
+            var result = S3Service.IsDirectoryExists(_bucketName, dir);
+
+            Assert.True(result, "CreateDirectory - Directory creation failed");
+
+            S3Service.DeleteDirectory(_bucketName, dir); //Cleanup
         }
 
         [Fact]
         public void GetSubDirectories()
         {
-            var path1 = "A1";
-            var folders = S3Service.GetSubDirectories(_bucketName, path1);
+            var dir = "GetSubDirectories-" + Guid.NewGuid().ToString();
+            S3Service.CreateDirectory(_bucketName, dir);
+            S3Service.CreateDirectory(_bucketName, dir + "/fol1");
+            S3Service.CreateDirectory(_bucketName, dir + "/fol2");
+            S3Service.CreateDirectory(_bucketName, dir + "/fol3");
+            var folders = S3Service.GetSubDirectories(_bucketName, dir);
+
+            Assert.Equal(3, folders.Count);
+
+            S3Service.DeleteDirectory(_bucketName, dir, true); //Cleanup
         }
 
         [Fact]
-        public void GetAllDirectoriesRecursive()
+        public void GetAllObjects_SendValidPath_GetListOfObjects()
         {
-            var path1 = "A";
-            var folders = S3Service.GetAllDirectoriesRecursive(_bucketName, path1);
+            var dir = "GetAllObjects-" + Guid.NewGuid().ToString();
+            S3Service.CreateDirectory(_bucketName, dir);
+            S3Service.CreateDirectory(_bucketName, dir + "/fol1");
+            S3Service.CreateDirectory(_bucketName, dir + "/fol2");
+            S3Service.CreateDirectory(_bucketName, dir + "/fol3/fol31/fol322");
+            S3Service.CreateDirectory(_bucketName, dir + "/fol4");
+            S3Service.CreateDirectory(_bucketName, dir + "/fol4/fol41");
+
+            var objects = S3Service.GetAllObjects(_bucketName, dir);
+
+            Assert.Equal(6, objects.Count);
+
+            S3Service.DeleteDirectory(_bucketName, dir, true); //Cleanup
+        }
+
+        [Fact]
+        public void GetAllObjects_SendInValidPath_GetListOfObjects()
+        {
+            var objects = S3Service.GetAllObjects(_bucketName, "path/not/exits");
+
+            Assert.Empty(objects);
+        }
+
+        [Fact]
+        public void DeleteDirectory_DeleteWithRecursiveTrue_Success()
+        {
+            var dir = "DeleteDirectory-" + Guid.NewGuid().ToString();
+            S3Service.CreateDirectory(_bucketName, dir);
+            S3Service.CreateDirectory(_bucketName, dir + "/fol1");
+            S3Service.CreateDirectory(_bucketName, dir + "/fol2");
+            S3Service.CreateDirectory(_bucketName, dir + "/fol3");
+            S3Service.CreateDirectory(_bucketName, dir + "/fol3/fol31");
+            
+            var result = S3Service.DeleteDirectory(_bucketName, dir, true);
+
+            Assert.Equal(5, result);
+        }
+
+        [Fact]
+        public void DeleteDirectory_DeleteWithRecursiveFalse_ThrowsError()
+        {
+            var dir = "DeleteDirectory-" + Guid.NewGuid().ToString();
+            S3Service.CreateDirectory(_bucketName, dir);
+            S3Service.CreateDirectory(_bucketName, dir + "/fol1");
+            S3Service.CreateDirectory(_bucketName, dir + "/fol2");
+            S3Service.CreateDirectory(_bucketName, dir + "/fol3");
+            S3Service.CreateDirectory(_bucketName, dir + "/fol3/fol31");
+
+
+            Assert.Throws<InvalidOperationException>(() =>
+                S3Service.DeleteDirectory(_bucketName, dir));
+
+            S3Service.DeleteDirectory(_bucketName, dir, true);//Clean up
+
         }
 
     }
