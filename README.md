@@ -3,7 +3,7 @@
 
 [![.NET](https://github.com/bhuvaneshsaha/AWS.Wrappers/actions/workflows/dotnet.yml/badge.svg)](https://github.com/bhuvaneshsaha/AWS.Wrappers/actions/workflows/dotnet.yml)
 
-AWS Wrappers is a straight-forward **.NET 6 C# class library** that is built on top of AWS libraries, which are provided by Amazon Web Services.
+AWS Wrappers is a straightforward **.NET 6 C# class library** to perform basic operations AWS S3 from the .NET core application which is built on top of AWS libraries, which Amazon Web Services provide.
 
 The AWS libraries provide all the features needed to perform operations with AWS, but they are sometimes not straight forward to use and we need to implement them in our application.
 
@@ -12,9 +12,9 @@ So, AWS Wrappers S3 is designed to do basic operations such as creating buckets,
 ## Usage
 Clone the code from the master branch or download stable release from the release area.
 
-You can copy the `AWS.Wrappers.S3` class library into their project solution folder and add references (dependencies) to their project, then you can utilize the library.
+You can copy the `AWS.Wrappers.S3` class library into your project solution folder and add references (dependencies) to their project, then you can utilize the library.
 
-If you prefers to have the wrapper classes in their own project, you can simply copy the necessary interfaces and classes into their projects and start working with them.
+If you prefers to have the wrapper classes in your own project, you can simply copy the necessary interfaces and classes into your projects and start working with them.
 
 > The library contains both synchronous and asynchronous methods.
 
@@ -50,12 +50,10 @@ _In asynchronous,_
 >>[Version 1.0.0](AWS.Wrappers.S3/Versions/V1_0_0.md)
 
 ## Roadmap
-- Add Async support
-- Add Unit test support
-- Create Sample project
 
+- [X] Ability to run all unit tests at once
+- [ ] Supports KMS
 
 ## Contribution
 
-Contibution is always welcome. If you would like to contribute to this project, please contact <bhuvaneshmib@gmail.com>.
-
+Contibution is always welcome. If you would like to contribute to this project, please contact bhuvaneshmib@gmail.com.
