@@ -28,7 +28,7 @@ public partial class S3Service
     {
         path = PathFormat(path);
 
-        if (await IsDirectoryExistsAsync(bucketName, path)) return;
+        if (await IsDirectoryExistsAsync(bucketName, path, cancellationToken)) return;
 
         var request = new PutObjectRequest()
         {
@@ -47,37 +47,37 @@ public partial class S3Service
         }
     }
 
-    public async Task DeleteDirectoryAsync(string bucketName, string path, bool recursive = false, CancellationToken cancellationToken = default)
+    public async Task<int> DeleteDirectoryAsync(string bucketName, string path, bool recursive = false, CancellationToken cancellationToken = default)
     {
         path = PathFormat(path);
 
         if (!await IsDirectoryExistsAsync(bucketName, path, cancellationToken))
         {
-            return;
+            return 0;
         }
 
-        var subFolders = await GetSubDirectoriesAsync(bucketName, path, cancellationToken);
-        //Todo: Need to modify after implementing GetFiles
-        //var files = GetFiles(bucketName, path);
+        var objects = await GetAllObjectsAsync(bucketName, path, cancellationToken);
 
-        //if (!recursive && subFolders?.Count > 0 || files?.Count > 0)
-        if (!recursive && subFolders?.Count > 0)
+        if (!recursive && objects.Count > 1)
         {
             throw new InvalidOperationException("The directory is not empty. Try recrusive = true to delete recrusively.");
         }
 
-        DeleteObjectRequest deleteObject = new DeleteObjectRequest
+        var keys = new List<KeyVersion>();
+        foreach (var item in objects)
+        {
+            keys.Add(new KeyVersion { Key = item });
+        }
+
+        keys.Add(new KeyVersion { Key = path });
+        var request = new DeleteObjectsRequest()
         {
             BucketName = bucketName,
-            Key = path,
+            Objects = keys,
         };
 
-        var response = await _s3Client.DeleteObjectAsync(deleteObject, cancellationToken);
+        return (await _s3Client.DeleteObjectsAsync(request, cancellationToken))?.DeletedObjects?.Count ?? 0;
 
-        if (response.HttpStatusCode != System.Net.HttpStatusCode.NoContent || response.HttpStatusCode != System.Net.HttpStatusCode.OK)
-        {
-            throw new ArgumentException(response.ResponseMetadata.ToString());
-        }
     }
 
     public async Task<List<string>> GetSubDirectoriesAsync(string bucketName, string path, CancellationToken cancellationToken = default)
@@ -117,7 +117,8 @@ public partial class S3Service
         return files;
     }
 
-    public async Task<List<string>> GetAllDirectoriesRecursiveAsync(string bucketName, string path, CancellationToken cancellationToken = default)
+    public async Task<List<string>> GetAllDirectoriesRecursiveAsync(string bucketName, string path,
+        CancellationToken cancellationToken = default)
     {
         path = PathFormat(path);
 
@@ -143,6 +144,33 @@ public partial class S3Service
         }
 
         return files;
+    }
+
+
+    public async Task<List<string>> GetAllObjectsAsync(string bucketName, string path, CancellationToken cancellationToken = default)
+    {
+        var objects = new List<string>();
+        ListObjectsV2Request request = new ListObjectsV2Request
+        {
+            Prefix = path,
+            BucketName = bucketName,
+            MaxKeys = 1000
+        };
+        ListObjectsV2Response response;
+        do
+        {
+            response = await _s3Client.ListObjectsV2Async(request, cancellationToken);
+
+            foreach (var item in response.S3Objects)
+            {
+                objects.Add(item.Key);
+            }
+
+            request.ContinuationToken = response.NextContinuationToken;
+
+        } while (response.IsTruncated);
+
+        return objects;
     }
 
 

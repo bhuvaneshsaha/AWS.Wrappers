@@ -31,7 +31,7 @@ namespace AWS.Wrappers.S3.Interfaces
         /// <param name="path"></param>
         /// <param name="recursive"></param>
         /// <returns></returns>
-        Task DeleteDirectoryAsync(string bucketName, string path, bool recursive = false, CancellationToken cancellationToken = default);
+        Task<int> DeleteDirectoryAsync(string bucketName, string path, bool recursive = false, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// It gets the list of subdirectories from the given path.
@@ -49,6 +49,11 @@ namespace AWS.Wrappers.S3.Interfaces
         /// <returns></returns>
         Task<List<string>> GetAllDirectoriesRecursiveAsync(string bucketName, string path, CancellationToken cancellationToken = default);
 
+        /// <summary>
+        /// Gets all object under the path, both folder and files
+        /// </summary>
+        /// <returns></returns>
+        Task<List<string>> GetAllObjectsAsync(string bucketName, string path, CancellationToken cancellationToken = default);
 
     }
 }

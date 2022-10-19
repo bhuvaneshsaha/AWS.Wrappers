@@ -1,4 +1,5 @@
-﻿using Amazon.S3;
+﻿using Amazon.Runtime;
+using Amazon.S3;
 using Amazon.S3.Model;
 using System;
 using System.Collections.Generic;
@@ -47,37 +48,37 @@ public partial class S3Service
         }
     }
 
-    public void DeleteDirectory(string bucketName, string path, bool recursive = false)
+    public int DeleteDirectory(string bucketName, string path, bool recursive = false)
     {
         path = PathFormat(path);
 
         if (!IsDirectoryExists(bucketName, path))
         {
-            return;
+            return 0;
         }
 
-        var subFolders = GetSubDirectories(bucketName, path);
-        //Todo: Need to modify after implementing GetFiles
-        //var files = GetFiles(bucketName, path);
+        var objects = GetAllObjects(bucketName, path);
 
-        //if (!recursive && subFolders?.Count > 0 || files?.Count > 0)
-        if (!recursive && subFolders?.Count > 0)
+        if (!recursive && objects.Count > 1)
         {
             throw new InvalidOperationException("The directory is not empty. Try recrusive = true to delete recrusively.");
         }
 
-        DeleteObjectRequest deleteObject = new DeleteObjectRequest
+        var keys = new List<KeyVersion>();
+        foreach (var item in objects)
+        {
+            keys.Add(new KeyVersion { Key = item });
+        }
+
+        keys.Add(new KeyVersion { Key = path });
+        var request = new DeleteObjectsRequest()
         {
             BucketName = bucketName,
-            Key = path,
+            Objects = keys,
         };
 
-        var response = _s3Client.DeleteObjectAsync(deleteObject).GetAwaiter().GetResult();
+        return _s3Client.DeleteObjectsAsync(request).GetAwaiter().GetResult()?.DeletedObjects?.Count ?? 0;
 
-        if (response.HttpStatusCode != System.Net.HttpStatusCode.NoContent || response.HttpStatusCode != System.Net.HttpStatusCode.OK)
-        {
-            throw new ArgumentException(response.ResponseMetadata.ToString());
-        }
     }
 
     public List<string> GetSubDirectories(string bucketName, string path)
@@ -107,7 +108,7 @@ public partial class S3Service
             if (item.Size == 0)
             {
                 temp = temp.Split('/')[0];
-                if (files.Contains(temp))
+                if (!files.Contains(temp))
                 {
                     files.Add(temp);
                 }
@@ -144,5 +145,32 @@ public partial class S3Service
 
         return files;
     }
+
+    public List<string> GetAllObjects(string bucketName, string path)
+    {
+        var objects = new List<string>();
+        ListObjectsV2Request request = new ListObjectsV2Request
+        {
+            Prefix = path,
+            BucketName = bucketName,
+            MaxKeys = 1000
+        };
+        ListObjectsV2Response response;
+        do
+        {
+            response = _s3Client.ListObjectsV2Async(request).GetAwaiter().GetResult();
+
+            foreach (var item in response.S3Objects)
+            {
+                objects.Add(item.Key);
+            }
+
+            request.ContinuationToken = response.NextContinuationToken;
+
+        } while (response.IsTruncated);
+
+        return objects;
+    }
+
 
 }
