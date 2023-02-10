@@ -32,7 +32,7 @@ namespace AWS.Wrappers.S3.Tests
             get { return _configuration ??= InitConfiguration(); }
         }
 
-        public string _bucketName;
+        public string? _bucketName;
 
         private IS3Service GetS3ServiceObject()
         {
