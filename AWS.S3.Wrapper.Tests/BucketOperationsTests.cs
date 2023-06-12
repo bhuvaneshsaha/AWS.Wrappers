@@ -10,21 +10,6 @@ public class BucketOperationsTests
         _bucketOperations = new BucketOperations(_amazonS3Mock.Object);
     }
 
-    // [Fact]
-    // public void CreateBucket_CallsPutBucketAsync_WithBucketName()
-    // {
-    //     // Arrange
-    //     var bucketName = "my-bucket";
-
-    //     // Act
-    //     _bucketOperations.CreateBucket(bucketName);
-
-    //     // Assert
-    //     _amazonS3Mock.Verify(x => x.PutBucketAsync(
-    //         It.Is<PutBucketRequest>(y => y.BucketName == bucketName),
-    //         It.IsAny<CancellationToken>()), Times.Once);
-    // }
-
     [Fact]
     public void CreateBucket_ShouldCallPutBucketAsyncWithCorrectRequest()
     {
@@ -59,7 +44,7 @@ public class BucketOperationsTests
     }
 
     [Fact]
-    public void CreateBucket_ShouldThrowExceptionOnFailure()
+    public async Task CreateBucket_ShouldThrowExceptionOnFailure()
     {
         // Arrange
         var bucketName = "my-bucket";
@@ -69,8 +54,10 @@ public class BucketOperationsTests
             .ThrowsAsync(new AmazonS3Exception("Error creating bucket", new Exception()));
 
         // Act and Assert
-        Assert.Throws<AmazonS3Exception>(() => _bucketOperations.CreateBucket(bucketName));
+        var exception = await Assert.ThrowsAsync<AmazonS3Exception>(async () => await _bucketOperations.CreateBucketAsync(bucketName));
+        Assert.Equal("Error creating bucket", exception.Message);
     }
+
 
 
 }
