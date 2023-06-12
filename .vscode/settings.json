@@ -2,5 +2,5 @@
     "cSpell.words": [
         "appsettings"
     ],
-    "dotnet.defaultSolution": "old\\AWS.Wrappers.sln"
+    "dotnet.defaultSolution": "AWS.Wrappers.sln"
 }
