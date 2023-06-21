@@ -12,7 +12,6 @@ public class BucketOperations : IBucketOperations
         this._s3Client = s3Client;
     }
 
-
     public void CreateBucket(string bucketName)
     {
         if (DoesBucketExist(bucketName))
@@ -116,7 +115,6 @@ public class BucketOperations : IBucketOperations
 
             listObjectsRequest.ContinuationToken = listObjectsResponse.NextContinuationToken;
         } while (listObjectsResponse.IsTruncated);
-        
     }
 
     public async Task EmptyBucketAsync(string bucketName, CancellationToken cancellationToken = default)

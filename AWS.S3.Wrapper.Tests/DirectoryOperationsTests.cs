@@ -1,7 +1,6 @@
 
 namespace AWS.S3.Wrapper.Tests;
 
-
 public class DirectoryOperationsTests : TestBase, IDisposable
 {
     private readonly BucketOperations _bucketOperations;
@@ -34,7 +33,6 @@ public class DirectoryOperationsTests : TestBase, IDisposable
         _createdBucketNames.Add(bucketName);
     }
 
-
     #endregion
 
     #region async methods
@@ -65,5 +63,4 @@ public class DirectoryOperationsTests : TestBase, IDisposable
             _bucketOperations.DeleteBucket(bucketName);
         }
     }
-
 }

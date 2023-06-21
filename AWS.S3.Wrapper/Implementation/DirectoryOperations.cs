@@ -29,7 +29,6 @@ public class DirectoryOperations : IDirectoryOperations
 
         _s3Client.PutObjectAsync(putObjectRequest).Wait();
     }
-
     public async Task CreateDirectoryAsync(string bucketName, string directoryPath, CancellationToken cancellationToken = default)
     {
         if (await DirectoryExistsAsync(bucketName, directoryPath, cancellationToken))

@@ -32,7 +32,6 @@ public class BucketOperationsTests : TestBase, IDisposable
         _createdBucketNames.Add(bucketName);
     }
 
-
     [Fact]
     public void CreateBucket_ShouldCreateBucket()
     {
@@ -154,5 +153,4 @@ public class BucketOperationsTests : TestBase, IDisposable
             _bucketOperations.DeleteBucket(bucketName);
         }
     }
-
 }
