@@ -1,6 +1,8 @@
 ﻿
 # AWS Wrappers S3 (AWSWS3)
 
+[![CodeFactor](https://www.codefactor.io/repository/github/bhuvaneshsaha/aws.wrappers/badge/s3-wrapper-upgrade)](https://www.codefactor.io/repository/github/bhuvaneshsaha/aws.wrappers/overview/s3-wrapper-upgrade)
+
 [![.NET](https://github.com/bhuvaneshsaha/AWS.Wrappers/actions/workflows/dotnet.yml/badge.svg)](https://github.com/bhuvaneshsaha/AWS.Wrappers/actions/workflows/dotnet.yml)
 
 AWS Wrappers is a straightforward **.NET 6 C# class library** to perform basic operations AWS S3 from the .NET core application which is built on top of AWS libraries, which Amazon Web Services provide.
