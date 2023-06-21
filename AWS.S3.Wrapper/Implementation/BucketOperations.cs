@@ -15,7 +15,7 @@ public class BucketOperations : IBucketOperations
 
     public void CreateBucket(string bucketName)
     {
-        if(DoesBucketExist(bucketName)) 
+        if (DoesBucketExist(bucketName))
         {
             throw new Exception("Bucket already exist");
         }
@@ -30,7 +30,7 @@ public class BucketOperations : IBucketOperations
 
     public async Task CreateBucketAsync(string bucketName, CancellationToken cancellationToken = default)
     {
-        if(await DoesBucketExistAsync(bucketName, cancellationToken)) 
+        if (await DoesBucketExistAsync(bucketName, cancellationToken))
         {
             throw new Exception("Bucket already exist");
         }
@@ -45,7 +45,7 @@ public class BucketOperations : IBucketOperations
 
     public void DeleteBucket(string bucketName)
     {
-        if(!DoesBucketExist(bucketName)) 
+        if (!DoesBucketExist(bucketName))
         {
             throw new Exception("Bucket not exist");
         }
@@ -88,5 +88,62 @@ public class BucketOperations : IBucketOperations
         var listBucketsRequest = new ListBucketsRequest();
         var response = await _s3Client.ListBucketsAsync(listBucketsRequest, cancellationToken);
         return response.Buckets.Select(x => x.BucketName);
+    }
+
+    public void EmptyBucket(string bucketName)
+    {
+        var listObjectsRequest = new ListObjectsV2Request
+        {
+            BucketName = bucketName
+        };
+
+        ListObjectsV2Response listObjectsResponse;
+
+        do
+        {
+            listObjectsResponse = _s3Client.ListObjectsV2Async(listObjectsRequest).Result;
+
+            if (listObjectsResponse.KeyCount > 0)
+            {
+                var deleteObjectsRequest = new DeleteObjectsRequest
+                {
+                    BucketName = bucketName,
+                    Objects = listObjectsResponse.S3Objects.Select(x => new KeyVersion { Key = x.Key }).ToList()
+                };
+
+                _s3Client.DeleteObjectsAsync(deleteObjectsRequest).Wait();
+            }
+
+            listObjectsRequest.ContinuationToken = listObjectsResponse.NextContinuationToken;
+        } while (listObjectsResponse.IsTruncated);
+        
+    }
+
+    public async Task EmptyBucketAsync(string bucketName, CancellationToken cancellationToken = default)
+    {
+        var listObjectsRequest = new ListObjectsV2Request
+        {
+            BucketName = bucketName
+        };
+
+        ListObjectsV2Response listObjectsResponse;
+
+        do
+        {
+            listObjectsResponse = await _s3Client.ListObjectsV2Async(listObjectsRequest, cancellationToken);
+
+            if (listObjectsResponse.KeyCount > 0)
+            {
+                var deleteObjectsRequest = new DeleteObjectsRequest
+                {
+                    BucketName = bucketName,
+                    Objects = listObjectsResponse.S3Objects.Select(x => new KeyVersion { Key = x.Key }).ToList()
+                };
+
+                await _s3Client.DeleteObjectsAsync(deleteObjectsRequest, cancellationToken);
+            }
+
+            listObjectsRequest.ContinuationToken = listObjectsResponse.NextContinuationToken;
+        } while (listObjectsResponse.IsTruncated);
     }
 }
