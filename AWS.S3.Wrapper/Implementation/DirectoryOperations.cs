@@ -28,7 +28,6 @@ public class DirectoryOperations : IDirectoryOperations
         };
 
         _s3Client.PutObjectAsync(putObjectRequest).Wait();
-
     }
 
     public async Task CreateDirectoryAsync(string bucketName, string directoryPath, CancellationToken cancellationToken = default)
@@ -52,20 +51,17 @@ public class DirectoryOperations : IDirectoryOperations
 
         await _s3Client.PutObjectAsync(putObjectRequest, cancellationToken);
     }
-
     public void DeleteDirectory(string bucketName, string directoryPath)
     {
         if (!directoryPath.EndsWith("/"))
         {
             directoryPath += "/";
         }
-
         var listObjectsRequest = new ListObjectsV2Request
         {
             BucketName = bucketName,
             Prefix = directoryPath
         };
-
         ListObjectsV2Response listObjectsResponse;
         do
         {
@@ -82,7 +78,6 @@ public class DirectoryOperations : IDirectoryOperations
 
                 _s3Client.DeleteObjectsAsync(deleteObjectsRequest).Wait();
             }
-
             // If response is truncated, set the marker to get the next batch of objects
             if (listObjectsResponse.IsTruncated)
             {
@@ -97,13 +92,11 @@ public class DirectoryOperations : IDirectoryOperations
         {
             directoryPath += "/";
         }
-
         var listObjectsRequest = new ListObjectsV2Request
         {
             BucketName = bucketName,
             Prefix = directoryPath
         };
-
         ListObjectsV2Response listObjectsResponse;
         do
         {
@@ -117,7 +110,6 @@ public class DirectoryOperations : IDirectoryOperations
                     BucketName = bucketName,
                     Objects = listObjectsResponse.S3Objects.Select(o => new KeyVersion { Key = o.Key }).ToList()
                 };
-
                 await _s3Client.DeleteObjectsAsync(deleteObjectsRequest, cancellationToken);
             }
 
@@ -135,14 +127,12 @@ public class DirectoryOperations : IDirectoryOperations
         {
             parentDirectoryPath += "/";
         }
-
         var listObjectsRequest = new ListObjectsV2Request
         {
             BucketName = bucketName,
             Prefix = parentDirectoryPath,
             Delimiter = "/"
         };
-
         var directories = new List<string>();
         ListObjectsV2Response listObjectsResponse;
         do
