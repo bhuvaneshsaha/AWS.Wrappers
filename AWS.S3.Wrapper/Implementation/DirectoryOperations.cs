@@ -11,6 +11,11 @@ public class DirectoryOperations : IDirectoryOperations
     }
     public void CreateDirectory(string bucketName, string directoryPath)
     {
+        if(DirectoryExists(bucketName, directoryPath))
+        {
+            return;
+        }
+
         if (!directoryPath.EndsWith("/"))
         {
             directoryPath += "/";
@@ -29,6 +34,11 @@ public class DirectoryOperations : IDirectoryOperations
 
     public async Task CreateDirectoryAsync(string bucketName, string directoryPath, CancellationToken cancellationToken = default)
     {
+        if (await DirectoryExistsAsync(bucketName, directoryPath, cancellationToken))
+        {
+            return;
+        }
+        
         if (!directoryPath.EndsWith("/"))
         {
             directoryPath += "/";
@@ -192,4 +202,117 @@ public class DirectoryOperations : IDirectoryOperations
         return directories;
     }
 
+    public void EmptyDirectory(string bucketName, string directoryPath)
+    {
+        if (!directoryPath.EndsWith("/"))
+        {
+            directoryPath += "/";
+        }
+
+        var listObjectsRequest = new ListObjectsV2Request
+        {
+            BucketName = bucketName,
+            Prefix = directoryPath
+        };
+
+        ListObjectsV2Response listObjectsResponse;
+        do
+        {
+            // List all objects under the directory
+            listObjectsResponse = _s3Client.ListObjectsV2Async(listObjectsRequest).Result;
+            if (listObjectsResponse.S3Objects.Count > 0)
+            {
+                // Delete all objects under the directory
+                var deleteObjectsRequest = new DeleteObjectsRequest
+                {
+                    BucketName = bucketName,
+                    Objects = listObjectsResponse.S3Objects.Select(o => new KeyVersion { Key = o.Key }).ToList()
+                };
+
+                _s3Client.DeleteObjectsAsync(deleteObjectsRequest).Wait();
+            }
+
+            // If response is truncated, set the marker to get the next batch of objects
+            if (listObjectsResponse.IsTruncated)
+            {
+                listObjectsRequest.ContinuationToken = listObjectsResponse.NextContinuationToken;
+            }
+
+        } while (listObjectsResponse.IsTruncated); // Continue while there are more objects to list
+    }
+
+    public async Task EmptyDirectoryAsync(string bucketName, string directoryPath, CancellationToken cancellationToken = default)
+    {
+        if (!directoryPath.EndsWith("/"))
+        {
+            directoryPath += "/";
+        }
+
+        var listObjectsRequest = new ListObjectsV2Request
+        {
+            BucketName = bucketName,
+            Prefix = directoryPath
+        };
+
+        ListObjectsV2Response listObjectsResponse;
+        do
+        {
+            // List all objects under the directory
+            listObjectsResponse = _s3Client.ListObjectsV2Async(listObjectsRequest, cancellationToken).Result;
+            if (listObjectsResponse.S3Objects.Count > 0)
+            {
+                // Delete all objects under the directory
+                var deleteObjectsRequest = new DeleteObjectsRequest
+                {
+                    BucketName = bucketName,
+                    Objects = listObjectsResponse.S3Objects.Select(o => new KeyVersion { Key = o.Key }).ToList()
+                };
+
+                await _s3Client.DeleteObjectsAsync(deleteObjectsRequest, cancellationToken);
+            }
+
+            // If response is truncated, set the marker to get the next batch of objects
+            if (listObjectsResponse.IsTruncated)
+            {
+                listObjectsRequest.ContinuationToken = listObjectsResponse.NextContinuationToken;
+            }
+
+        } while (listObjectsResponse.IsTruncated); // Continue while there are more objects to list
+    }
+
+    public bool DirectoryExists(string bucketName, string directoryPath)
+    {
+        if (!directoryPath.EndsWith("/"))
+        {
+            directoryPath += "/";
+        }
+
+        var listObjectsRequest = new ListObjectsV2Request
+        {
+            BucketName = bucketName,
+            Prefix = directoryPath,
+            MaxKeys = 1
+        };
+
+        var listObjectsResponse = _s3Client.ListObjectsV2Async(listObjectsRequest).Result;
+
+        return listObjectsResponse.KeyCount > 0;
+    }
+
+    public Task<bool> DirectoryExistsAsync(string bucketName, string directoryPath, CancellationToken cancellationToken = default)
+    {
+        if (!directoryPath.EndsWith("/"))
+        {
+            directoryPath += "/";
+        }
+
+        var listObjectsRequest = new ListObjectsV2Request
+        {
+            BucketName = bucketName,
+            Prefix = directoryPath,
+            MaxKeys = 1
+        };
+
+        return _s3Client.ListObjectsV2Async(listObjectsRequest, cancellationToken).ContinueWith(t => t.Result.KeyCount > 0);
+    }
 }
