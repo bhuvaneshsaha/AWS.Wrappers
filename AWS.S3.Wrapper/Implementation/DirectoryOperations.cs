@@ -7,11 +7,10 @@ public class DirectoryOperations : IDirectoryOperations
     public DirectoryOperations(IAmazonS3 s3Client)
     {
         _s3Client = s3Client;
-
     }
     public void CreateDirectory(string bucketName, string directoryPath)
     {
-        if(DirectoryExists(bucketName, directoryPath))
+        if (DirectoryExists(bucketName, directoryPath))
         {
             return;
         }
@@ -38,7 +37,7 @@ public class DirectoryOperations : IDirectoryOperations
         {
             return;
         }
-        
+
         if (!directoryPath.EndsWith("/"))
         {
             directoryPath += "/";
@@ -89,7 +88,6 @@ public class DirectoryOperations : IDirectoryOperations
             {
                 listObjectsRequest.ContinuationToken = listObjectsResponse.NextContinuationToken;
             }
-
         } while (listObjectsResponse.IsTruncated); // Continue while there are more objects to list
     }
 
@@ -128,7 +126,6 @@ public class DirectoryOperations : IDirectoryOperations
             {
                 listObjectsRequest.ContinuationToken = listObjectsResponse.NextContinuationToken;
             }
-
         } while (listObjectsResponse.IsTruncated); // Continue while there are more objects to list
     }
 
@@ -161,7 +158,6 @@ public class DirectoryOperations : IDirectoryOperations
             {
                 listObjectsRequest.ContinuationToken = listObjectsResponse.NextContinuationToken;
             }
-
         } while (listObjectsResponse.IsTruncated); // Continue while there are more objects to list
 
         return directories;
@@ -196,7 +192,6 @@ public class DirectoryOperations : IDirectoryOperations
             {
                 listObjectsRequest.ContinuationToken = listObjectsResponse.NextContinuationToken;
             }
-
         } while (listObjectsResponse.IsTruncated); // Continue while there are more objects to list
 
         return directories;
@@ -237,7 +232,6 @@ public class DirectoryOperations : IDirectoryOperations
             {
                 listObjectsRequest.ContinuationToken = listObjectsResponse.NextContinuationToken;
             }
-
         } while (listObjectsResponse.IsTruncated); // Continue while there are more objects to list
     }
 
@@ -276,7 +270,6 @@ public class DirectoryOperations : IDirectoryOperations
             {
                 listObjectsRequest.ContinuationToken = listObjectsResponse.NextContinuationToken;
             }
-
         } while (listObjectsResponse.IsTruncated); // Continue while there are more objects to list
     }
 
