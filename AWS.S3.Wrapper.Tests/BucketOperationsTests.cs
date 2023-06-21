@@ -14,6 +14,25 @@ public class BucketOperationsTests : TestBase, IDisposable
     }
 
     #region Sync Methods Tests
+
+    [Fact]
+    public void ListBuckets_ShouldListBucket()
+    {
+        // Arrange
+        var bucketName = _bucketPrefix + "-" + Guid.NewGuid().ToString("N");
+        _bucketOperations.CreateBucket(bucketName);
+
+        // Act
+        var buckets = _bucketOperations.ListBuckets();
+
+        // Assert
+        Assert.Contains(buckets, x => x == bucketName);
+
+        // for cleanup
+        _createdBucketNames.Add(bucketName);
+    }
+
+
     [Fact]
     public void CreateBucket_ShouldCreateBucket()
     {
@@ -48,6 +67,19 @@ public class BucketOperationsTests : TestBase, IDisposable
 
     }
 
+    [Fact]
+    public void DeleteBucket_ShouldDeleteBucket()
+    {
+        // Arrange
+        var bucketName = _bucketPrefix + "-" + Guid.NewGuid().ToString("N");
+        _bucketOperations.CreateBucket(bucketName);
+
+        // Act
+        _bucketOperations.DeleteBucket(bucketName);
+
+        // Assert
+        Assert.False(_bucketOperations.DoesBucketExist(bucketName));
+    }
 
     #endregion
 
@@ -84,6 +116,37 @@ public class BucketOperationsTests : TestBase, IDisposable
         // for cleanup
         _createdBucketNames.Add(bucketName);
 
+    }
+
+    [Fact]
+    public async Task ListBucketsAsync_ShouldListBucketAsync()
+    {
+        // Arrange
+        var bucketName = _bucketPrefix + "-" + Guid.NewGuid().ToString("N");
+        await _bucketOperations.CreateBucketAsync(bucketName);
+
+        // Act
+        var buckets = await _bucketOperations.ListBucketsAsync();
+
+        // Assert
+        Assert.Contains(buckets, x => x == bucketName);
+
+        // for cleanup
+        _createdBucketNames.Add(bucketName);
+    }
+
+    [Fact]
+    public async Task DeleteBucketAsync_ShouldDeleteBucketAsync()
+    {
+        // Arrange
+        var bucketName = _bucketPrefix + "-" + Guid.NewGuid().ToString("N");
+        _bucketOperations.CreateBucket(bucketName);
+
+        // Act
+        await _bucketOperations.DeleteBucketAsync(bucketName);
+
+        // Assert
+        Assert.False(_bucketOperations.DoesBucketExist(bucketName));
     }
 
     #endregion
