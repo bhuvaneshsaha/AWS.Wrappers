@@ -52,7 +52,6 @@ public class BucketOperationsTests : TestBase, IDisposable
     [Fact]
     public void CreateBucket_ShouldThrowExceptionOnFailure()
     {
-
         // Arrange
         var bucketName = _bucketPrefix + "-" + Guid.NewGuid().ToString("N");
 
@@ -64,7 +63,6 @@ public class BucketOperationsTests : TestBase, IDisposable
 
         // for cleanup
         _createdBucketNames.Add(bucketName);
-
     }
 
     [Fact]
@@ -103,7 +101,6 @@ public class BucketOperationsTests : TestBase, IDisposable
     [Fact]
     public async Task CreateBucketAsync_ShouldThrowExceptionOnFailureAsync()
     {
-
         // Arrange
         var bucketName = _bucketPrefix + "-" + Guid.NewGuid().ToString("N");
 
@@ -115,7 +112,6 @@ public class BucketOperationsTests : TestBase, IDisposable
 
         // for cleanup
         _createdBucketNames.Add(bucketName);
-
     }
 
     [Fact]
