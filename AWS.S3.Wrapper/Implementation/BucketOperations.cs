@@ -1,4 +1,6 @@
 
+using Amazon.S3.Util;
+
 namespace AWS.S3.Wrapper.Implementation;
 
 public class BucketOperations : IBucketOperations
@@ -10,8 +12,14 @@ public class BucketOperations : IBucketOperations
         this._s3Client = s3Client;
     }
 
+
     public void CreateBucket(string bucketName)
     {
+        if(DoesBucketExist(bucketName)) 
+        {
+            throw new Exception("Bucket already exist");
+        }
+
         var putBucketRequest = new PutBucketRequest
         {
             BucketName = bucketName,
@@ -22,6 +30,11 @@ public class BucketOperations : IBucketOperations
 
     public async Task CreateBucketAsync(string bucketName, CancellationToken cancellationToken = default)
     {
+        if(await DoesBucketExistAsync(bucketName, cancellationToken)) 
+        {
+            throw new Exception("Bucket already exist");
+        }
+
         var putBucketRequest = new PutBucketRequest
         {
             BucketName = bucketName,
@@ -32,6 +45,11 @@ public class BucketOperations : IBucketOperations
 
     public void DeleteBucket(string bucketName)
     {
+        if(!DoesBucketExist(bucketName)) 
+        {
+            throw new Exception("Bucket not exist");
+        }
+
         var deleteBucketRequest = new DeleteBucketRequest
         {
             BucketName = bucketName
@@ -46,6 +64,16 @@ public class BucketOperations : IBucketOperations
             BucketName = bucketName
         };
         await _s3Client.DeleteBucketAsync(deleteBucketRequest, cancellationToken);
+    }
+
+    public bool DoesBucketExist(string bucketName)
+    {
+        return AmazonS3Util.DoesS3BucketExistV2Async(_s3Client, bucketName).Result;
+    }
+
+    public async Task<bool> DoesBucketExistAsync(string bucketName, CancellationToken cancellationToken = default)
+    {
+        return await AmazonS3Util.DoesS3BucketExistV2Async(_s3Client, bucketName);
     }
 
     public IEnumerable<string> ListBuckets()

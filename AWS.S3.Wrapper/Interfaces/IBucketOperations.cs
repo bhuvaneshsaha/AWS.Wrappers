@@ -71,5 +71,30 @@ namespace AWS.S3.Wrapper.Interfaces
         /// <exception cref="AmazonServiceException">Thrown when the bucket deletion fails.</exception>
         /// <exception cref="AmazonClientException">Thrown when the bucket deletion fails.</exception>
         Task DeleteBucketAsync(string bucketName, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Checks if the S3 bucket with the given name exists.
+        /// </summary>
+        /// <param name="bucketName">The name of the bucket to check.</param>
+        /// <returns>True if the bucket exists, false otherwise.</returns>
+        /// <exception cref="ArgumentException">Thrown when the bucket name is invalid.</exception>
+        /// <exception cref="AmazonS3Exception">Thrown when the bucket existence check fails.</exception>
+        /// <exception cref="AmazonServiceException">Thrown when the bucket existence check fails.</exception>
+        /// <exception cref="AmazonClientException">Thrown when the bucket existence check fails.</exception>
+        bool DoesBucketExist(string bucketName);
+
+        /// <summary>
+        /// Checks if the S3 bucket with the given name exists.
+        /// </summary>
+        /// <param name="bucketName">The name of the bucket to check.</param>
+        /// <param name="cancellationToken">A cancellation token to cancel the asynchronous operation.</param>
+        /// <returns>True if the bucket exists, false otherwise.</returns>
+        /// <exception cref="ArgumentException">Thrown when the bucket name is invalid.</exception>
+        /// <exception cref="AmazonS3Exception">Thrown when the bucket existence check fails.</exception>
+        /// <exception cref="AmazonServiceException">Thrown when the bucket existence check fails.</exception>
+        /// <exception cref="AmazonClientException">Thrown when the bucket existence check fails.</exception>
+        Task<bool> DoesBucketExistAsync(string bucketName, CancellationToken cancellationToken = default);
+        
+        
     }
 }

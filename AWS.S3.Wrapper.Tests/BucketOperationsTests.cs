@@ -1,64 +1,99 @@
-﻿namespace AWS.S3.Wrapper.Tests;
-public class BucketOperationsTests
+﻿using Xunit.Sdk;
+
+namespace AWS.S3.Wrapper.Tests;
+public class BucketOperationsTests : TestBase, IDisposable
 {
-    private readonly Mock<IAmazonS3> _amazonS3Mock;
     private readonly BucketOperations _bucketOperations;
+    private readonly string _bucketPrefix = "my-unit-test-bucket";
+
+    private readonly List<string> _createdBucketNames = new();
 
     public BucketOperationsTests()
     {
-        _amazonS3Mock = new Mock<IAmazonS3>();
-        _bucketOperations = new BucketOperations(_amazonS3Mock.Object);
+        _bucketOperations = new BucketOperations(client);
     }
 
+    #region Sync Methods Tests
     [Fact]
-    public void CreateBucket_ShouldCallPutBucketAsyncWithCorrectRequest()
+    public void CreateBucket_ShouldCreateBucket()
     {
         // Arrange
-        var bucketName = "my-bucket";
-        var putBucketRequest = It.Is<PutBucketRequest>(r => r.BucketName == bucketName && r.UseClientRegion);
+        var bucketName = _bucketPrefix + "-" + Guid.NewGuid().ToString("N");
 
         // Act
         _bucketOperations.CreateBucket(bucketName);
 
         // Assert
-        _amazonS3Mock.Verify(x => x.PutBucketAsync(
-            It.Is<PutBucketRequest>(y => y.BucketName == bucketName),
-            It.IsAny<CancellationToken>()), Times.Once);
+        Assert.True(_bucketOperations.DoesBucketExist(bucketName));
+
+        // for cleanup
+        _createdBucketNames.Add(bucketName);
     }
 
     [Fact]
-    public async Task CreateBucketAsync_ShouldCallPutBucketAsyncWithCorrectRequest()
+    public void CreateBucket_ShouldThrowExceptionOnFailure()
     {
+
         // Arrange
-        var bucketName = "my-bucket";
-        var putBucketRequest = It.Is<PutBucketRequest>(r => r.BucketName == bucketName && r.UseClientRegion);
-        var cancellationToken = new CancellationToken();
+        var bucketName = _bucketPrefix + "-" + Guid.NewGuid().ToString("N");
 
         // Act
-        await _bucketOperations.CreateBucketAsync(bucketName, cancellationToken);
+        _bucketOperations.CreateBucket(bucketName);
 
         // Assert
-        _amazonS3Mock.Verify(x => x.PutBucketAsync(
-            It.Is<PutBucketRequest>(y => y.BucketName == bucketName),
-            It.IsAny<CancellationToken>()), Times.Once);
+        Assert.Throws<Exception>(() => _bucketOperations.CreateBucket(bucketName));
+
+        // for cleanup
+        _createdBucketNames.Add(bucketName);
+
+    }
+
+
+    #endregion
+
+    #region Async Methods Tests
+    [Fact]
+    public async Task CreateBucketAsync_ShouldCreateBucketAsync()
+    {
+        // Arrange
+        var bucketName = _bucketPrefix + "-" + Guid.NewGuid().ToString("N");
+
+        // Act
+        await _bucketOperations.CreateBucketAsync(bucketName);
+
+        // Assert
+        Assert.True(_bucketOperations.DoesBucketExist(bucketName));
+
+        // for cleanup
+        _createdBucketNames.Add(bucketName);
     }
 
     [Fact]
-    public async Task CreateBucket_ShouldThrowExceptionOnFailure()
+    public async Task CreateBucketAsync_ShouldThrowExceptionOnFailureAsync()
     {
+
         // Arrange
-        var bucketName = "my-bucket";
-        var putBucketRequest = It.Is<PutBucketRequest>(r => r.BucketName == bucketName && r.UseClientRegion);
+        var bucketName = _bucketPrefix + "-" + Guid.NewGuid().ToString("N");
 
-        _amazonS3Mock.Setup(x => x.PutBucketAsync(putBucketRequest, It.IsAny<CancellationToken>()))
-            .ThrowsAsync(new AmazonS3Exception("Error creating bucket", new Exception()));
+        // Act
+        await _bucketOperations.CreateBucketAsync(bucketName);
 
-        // Act and Assert
-        var exception = await Assert.ThrowsAsync<AmazonS3Exception>(async () => await _bucketOperations.CreateBucketAsync(bucketName));
-        Assert.Equal("Error creating bucket", exception.Message);
+        // Assert
+        await Assert.ThrowsAsync<Exception>(async () => await _bucketOperations.CreateBucketAsync(bucketName));
+
+        // for cleanup
+        _createdBucketNames.Add(bucketName);
+
     }
 
+    #endregion
 
+    public void Dispose()
+    {
+        foreach (var bucketName in _createdBucketNames)
+        {
+            _bucketOperations.DeleteBucket(bucketName);
+        }
+    }
 
 }
-
