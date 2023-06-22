@@ -14,7 +14,10 @@ public class TestBase
 
     public TestBase()
     {
-        System.Console.WriteLine(Environment.GetEnvironmentVariable("AWS_ACCESS_KEY_ID"));
-        System.Console.WriteLine(Environment.GetEnvironmentVariable("{{ secrets.AWS_ACCESS_KEY_ID }}"));
+        string accessKeyId = Environment.GetEnvironmentVariable("AWS_ACCESS_KEY_ID");
+        // string secretAccessKey = Environment.GetEnvironmentVariable("AWS_SECRET_ACCESS_KEY");
+
+        Console.WriteLine("Access key ID: " + accessKeyId);
+        // Console.WriteLine("Secret access key: " + secretAccessKey);
     }
 }
