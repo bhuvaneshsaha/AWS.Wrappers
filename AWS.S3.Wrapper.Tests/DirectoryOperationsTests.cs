@@ -6,6 +6,7 @@ public class DirectoryOperationsTests : TestBase, IDisposable
     private readonly BucketOperations _bucketOperations;
     private readonly DirectoryOperations _directoryOperations;
     private readonly string _bucketPrefix = "unit-test-directory";
+    private readonly CancellationToken cancellationToken = default;
 
     private readonly List<string> _createdBucketNames = new();
 
@@ -15,39 +16,19 @@ public class DirectoryOperationsTests : TestBase, IDisposable
         _directoryOperations = new(client);
     }
 
-    #region sync methods
-    [Fact]
-    public void CreateDirectory_ShouldCreateDirectory()
-    {
-        // arrange
-        var bucketName = $"{_bucketPrefix}-{Guid.NewGuid()}";
-        _bucketOperations.CreateBucket(bucketName);
-
-        // act
-        _directoryOperations.CreateDirectory(bucketName, "my-directory");
-
-        var isDirectoryExists = _directoryOperations.DirectoryExists(bucketName, "my-directory");
-
-        Assert.True(isDirectoryExists);
-
-        _createdBucketNames.Add(bucketName);
-    }
-
-    #endregion
-
     #region async methods
     [Fact]
     public async Task CreateDirectoryAsync_ShouldCreateDirectory()
     {
         // arrange
         var bucketName = $"{_bucketPrefix}-{Guid.NewGuid()}";
-        await _bucketOperations.CreateBucketAsync(bucketName);
+        await _bucketOperations.CreateBucketAsync(bucketName, cancellationToken);
 
         // act
-        await _directoryOperations.CreateDirectoryAsync(bucketName, "my-directory");
+        await _directoryOperations.CreateDirectoryAsync(bucketName, "my-directory", cancellationToken);
 
         // assert
-        var isDirectoryExists = await _directoryOperations.DirectoryExistsAsync(bucketName, "my-directory");
+        var isDirectoryExists = await _directoryOperations.DirectoryExistsAsync(bucketName, "my-directory", cancellationToken);
 
         Assert.True(isDirectoryExists);
 
@@ -59,8 +40,8 @@ public class DirectoryOperationsTests : TestBase, IDisposable
     {
         foreach (var bucketName in _createdBucketNames)
         {
-            _bucketOperations.EmptyBucket(bucketName);
-            _bucketOperations.DeleteBucket(bucketName);
+            _bucketOperations.EmptyBucketAsync(bucketName, cancellationToken).Wait();
+            _bucketOperations.DeleteBucketAsync(bucketName, cancellationToken).Wait();
         }
     }
 }
