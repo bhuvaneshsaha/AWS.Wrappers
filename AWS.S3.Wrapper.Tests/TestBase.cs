@@ -14,7 +14,7 @@ public class TestBase
 
     public TestBase()
     {
-        string accessKeyId = Environment.GetEnvironmentVariable("AWS_ACCESS_KEY_ID");
+        string accessKeyId = Environment.GetEnvironmentVariable("Greeting");
         // string secretAccessKey = Environment.GetEnvironmentVariable("AWS_SECRET_ACCESS_KEY");
 
         Console.WriteLine("Access key ID: " + accessKeyId);
