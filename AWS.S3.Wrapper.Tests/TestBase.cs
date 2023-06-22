@@ -11,4 +11,10 @@ public class TestBase
         Environment.GetEnvironmentVariable("AWS_SECRET_ACCESS_KEY") ?? Environment.GetEnvironmentVariable("{{ secrets.AWS_SECRET_ACCESS_KEY }}"),
         Amazon.RegionEndpoint.USEast1
     );
+
+    public TestBase()
+    {
+        System.Console.WriteLine(Environment.GetEnvironmentVariable("AWS_ACCESS_KEY_ID"));
+        System.Console.WriteLine(Environment.GetEnvironmentVariable("{{ secrets.AWS_ACCESS_KEY_ID }}"));
+    }
 }
