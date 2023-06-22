@@ -16,7 +16,6 @@ public class DirectoryOperationsTests : TestBase, IDisposable
         _directoryOperations = new(client);
     }
 
-    #region async methods
     [Fact]
     public async Task CreateDirectoryAsync_ShouldCreateDirectory()
     {
@@ -65,7 +64,7 @@ public class DirectoryOperationsTests : TestBase, IDisposable
         await _directoryOperations.CreateDirectoryAsync(bucketName, "my-directory/child2", cancellationToken);
 
         // act
-        var directories = await _directoryOperations.ListDirectoriesAsync(bucketName, "my-directory", cancellationToken);  
+        var directories = await _directoryOperations.ListDirectoriesAsync(bucketName, "my-directory", cancellationToken);
 
         // assert
         Assert.Equal(2, directories.Count());
@@ -92,13 +91,7 @@ public class DirectoryOperationsTests : TestBase, IDisposable
         Assert.Empty(directories);
 
         _createdBucketNames.Add(bucketName);
-
     }
-
-
-
-
-    #endregion
 
     public void Dispose()
     {
