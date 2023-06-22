@@ -1,0 +1,18 @@
+<RunSettings>
+  <!-- Configuration for code coverage -->
+  <DataCollectionRunSettings>
+    <DataCollectors>
+      <DataCollector friendlyName="XPlat code coverage">
+        <!-- Set the data collector type to Code Coverage -->
+        <Configuration>
+          <CodeCoverage>
+            <!-- Set the coverage output format to Cobertura -->
+            <OutputFormat>cobertura</OutputFormat>
+            <!-- Specify the directory where coverage reports will be generated -->
+            <OutputDirectory>.\coverage</OutputDirectory>
+          </CodeCoverage>
+        </Configuration>
+      </DataCollector>
+    </DataCollectors>
+  </DataCollectionRunSettings>
+</RunSettings>
