@@ -1,6 +1,8 @@
 ﻿using Xunit.Sdk;
 
 namespace AWS.S3.Wrapper.Tests;
+
+[Collection("Our Test Collection #1")]
 public class BucketOperationsTests : TestBase, IDisposable
 {
     protected static readonly IAmazonS3 client = new AmazonS3Client(AWS_ACCESS_KEY, AWS_ACCESS_SECRET, Amazon.RegionEndpoint.USEast1);
