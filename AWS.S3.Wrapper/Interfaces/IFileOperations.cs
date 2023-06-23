@@ -8,6 +8,7 @@ namespace AWS.S3.Wrapper.Interfaces
     public interface IFileOperations
     {
         Task PutFileAsync(string bucketName, string objectKey, Stream content, string contentType, CancellationToken cancellationToken);
+        Task<bool> DoseFileExistAsync(string bucketName, string objectKey, CancellationToken cancellationToken);
         Task<Stream> GetFileAsync(string bucketName, string objectKey, CancellationToken cancellationToken);
         Task DeleteFileAsync(string bucketName, string objectKey, CancellationToken cancellationToken);
         Task CopyFileAsync(string sourceBucket, string sourceObjectKey, string destinationBucket, string destinationObjectKey, CancellationToken cancellationToken);
