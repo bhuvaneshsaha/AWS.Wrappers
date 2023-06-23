@@ -6,21 +6,7 @@ namespace AWS.S3.Wrapper.Tests;
 [Collection("Our Test Collection #1")]
 public class FileMetadataOperationsTests : TestBase, IDisposable
 {
-    private readonly BucketOperations _bucketOperations;
-    private readonly FileMetadataOperations _fileMetadataOperations;
-    private readonly FileOperations _fileOperations;
-    private readonly DirectoryOperations _directoryOperations;
-    private readonly string _bucketPrefix = "unit-test-directory";
-    private readonly CancellationToken cancellationToken = default;
     private readonly List<string> _createdBucketNames = new();
-
-    public FileMetadataOperationsTests()
-    {
-        _bucketOperations = new(client);
-        _fileMetadataOperations = new(client);
-        _directoryOperations = new(client);
-        _fileOperations = new(client);
-    }
 
     [Fact]
     public async Task GetObjectMetadataAsync_ShouldGetAddedMetadataOfS3Object()

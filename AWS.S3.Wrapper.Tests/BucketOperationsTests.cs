@@ -5,15 +5,7 @@ namespace AWS.S3.Wrapper.Tests;
 [Collection("Our Test Collection #1")]
 public class BucketOperationsTests : TestBase, IDisposable
 {
-    private readonly BucketOperations _bucketOperations;
-    private readonly string _bucketPrefix = "my-unit-test-bucket";
-    private readonly CancellationToken cancellationToken = default;
     private readonly List<string> _createdBucketNames = new();
-
-    public BucketOperationsTests()
-    {
-        _bucketOperations = new BucketOperations(client);
-    }
 
     [Fact]
     public async Task CreateBucketAsync_ShouldCreateBucketAsync()

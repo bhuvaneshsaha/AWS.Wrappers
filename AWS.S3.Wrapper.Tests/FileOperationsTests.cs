@@ -9,17 +9,7 @@ namespace AWS.S3.Wrapper.Tests;
 [Collection("Our Test Collection #1")]
 public class FileOperationsTests : TestBase, IDisposable
 {
-    private readonly BucketOperations _bucketOperations;
-    private readonly FileOperations _fileOperations;
-    private readonly string _bucketPrefix = "my-unit-test-bucket";
-    private readonly CancellationToken cancellationToken = default;
     private readonly List<string> _createdBucketNames = new();
-
-    public FileOperationsTests()
-    {
-        _bucketOperations = new(client);
-        _fileOperations = new(client);
-    }
 
     [Fact]
     public async Task PutFileAsync_FileShouldUpload()

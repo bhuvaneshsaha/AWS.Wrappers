@@ -4,18 +4,7 @@ namespace AWS.S3.Wrapper.Tests;
 [Collection("Our Test Collection #1")]
 public class DirectoryOperationsTests : TestBase, IDisposable
 {
-    private readonly BucketOperations _bucketOperations;
-    private readonly DirectoryOperations _directoryOperations;
-    private readonly string _bucketPrefix = "unit-test-directory";
-    private readonly CancellationToken cancellationToken = default;
-
     private readonly List<string> _createdBucketNames = new();
-
-    public DirectoryOperationsTests()
-    {
-        _bucketOperations = new(client);
-        _directoryOperations = new(client);
-    }
 
     [Fact]
     public async Task CreateDirectoryAsync_ShouldCreateDirectory()

@@ -50,10 +50,4 @@ public class FileMetadataOperations : IFileMetadataOperations
 
         await _s3Client.CopyObjectAsync(copyRequest, cancellationToken);
     }
-
-    private string RemovePrefix(string key)
-{
-    const string prefix = "x-amz-meta-";
-    return key.StartsWith(prefix) ? key.Substring(prefix.Length) : key;
-}
 }
