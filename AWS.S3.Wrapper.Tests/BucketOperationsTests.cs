@@ -3,6 +3,7 @@
 namespace AWS.S3.Wrapper.Tests;
 public class BucketOperationsTests : TestBase, IDisposable
 {
+    protected static readonly IAmazonS3 client = new AmazonS3Client(AWS_ACCESS_KEY, AWS_ACCESS_SECRET, Amazon.RegionEndpoint.USEast1);
     private readonly BucketOperations _bucketOperations;
     private readonly string _bucketPrefix = "my-unit-test-bucket";
     private readonly CancellationToken cancellationToken = default;
@@ -75,7 +76,6 @@ public class BucketOperationsTests : TestBase, IDisposable
         // Assert
         Assert.False(await _bucketOperations.DoesBucketExistAsync(bucketName, cancellationToken));
     }
-
 
     public void Dispose()
     {
