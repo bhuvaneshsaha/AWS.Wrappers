@@ -36,6 +36,26 @@ public class DirectoryOperationsTests : TestBase, IDisposable
     }
 
     [Fact]
+    public async Task CreateDirectoryAsync_ShouldNotCreateMultipleDirectoryWithSameName()
+    {
+        // arrange
+        var bucketName = $"{_bucketPrefix}-{Guid.NewGuid()}";
+        await _bucketOperations.CreateBucketAsync(bucketName, cancellationToken);
+
+        // act
+        await _directoryOperations.CreateDirectoryAsync(bucketName, "my-directory", cancellationToken);
+        await _directoryOperations.CreateDirectoryAsync(bucketName, "my-directory", cancellationToken);
+
+        // assert
+        var directories = await _directoryOperations.ListDirectoriesAsync(bucketName, "my-directory", cancellationToken);
+
+        Assert.Single(directories);
+
+        _createdBucketNames.Add(bucketName);
+    }
+
+
+    [Fact]
     public async Task DeleteDirectoryAsync_ShouldDeleteDirectory()
     {
         // arrange
