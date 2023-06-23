@@ -14,12 +14,6 @@ public class BucketOperationsTests : TestBase, IDisposable
     }
 
     [Fact]
-    public void Tessssst()
-    {
-        Assert.True(true);
-    }
-
-    [Fact]
     public async Task CreateBucketAsync_ShouldCreateBucketAsync()
     {
         // Arrange
@@ -35,59 +29,59 @@ public class BucketOperationsTests : TestBase, IDisposable
         _createdBucketNames.Add(bucketName);
     }
 
-    // [Fact]
-    // public async Task CreateBucketAsync_ShouldThrowExceptionOnFailureAsync()
-    // {
-    //     // Arrange
-    //     var bucketName = _bucketPrefix + "-" + Guid.NewGuid().ToString("N");
+    [Fact]
+    public async Task CreateBucketAsync_ShouldThrowExceptionOnFailureAsync()
+    {
+        // Arrange
+        var bucketName = _bucketPrefix + "-" + Guid.NewGuid().ToString("N");
 
-    //     // Act
-    //     await _bucketOperations.CreateBucketAsync(bucketName, cancellationToken);
+        // Act
+        await _bucketOperations.CreateBucketAsync(bucketName, cancellationToken);
 
-    //     // Assert
-    //     await Assert.ThrowsAsync<Exception>(async () => await _bucketOperations.CreateBucketAsync(bucketName, cancellationToken));
+        // Assert
+        await Assert.ThrowsAsync<Exception>(async () => await _bucketOperations.CreateBucketAsync(bucketName, cancellationToken));
 
-    //     // for cleanup
-    //     _createdBucketNames.Add(bucketName);
-    // }
+        // for cleanup
+        _createdBucketNames.Add(bucketName);
+    }
 
-    // [Fact]
-    // public async Task ListBucketsAsync_ShouldListBucketAsync()
-    // {
-    //     // Arrange
-    //     var bucketName = _bucketPrefix + "-" + Guid.NewGuid().ToString("N");
-    //     await _bucketOperations.CreateBucketAsync(bucketName, cancellationToken);
+    [Fact]
+    public async Task ListBucketsAsync_ShouldListBucketAsync()
+    {
+        // Arrange
+        var bucketName = _bucketPrefix + "-" + Guid.NewGuid().ToString("N");
+        await _bucketOperations.CreateBucketAsync(bucketName, cancellationToken);
 
-    //     // Act
-    //     var buckets = await _bucketOperations.ListBucketsAsync(cancellationToken);
+        // Act
+        var buckets = await _bucketOperations.ListBucketsAsync(cancellationToken);
 
-    //     // Assert
-    //     Assert.Contains(buckets, x => x == bucketName);
+        // Assert
+        Assert.Contains(buckets, x => x == bucketName);
 
-    //     // for cleanup
-    //     _createdBucketNames.Add(bucketName);
-    // }
+        // for cleanup
+        _createdBucketNames.Add(bucketName);
+    }
 
-    // [Fact]
-    // public async Task DeleteBucketAsync_ShouldDeleteBucketAsync()
-    // {
-    //     // Arrange
-    //     var bucketName = _bucketPrefix + "-" + Guid.NewGuid().ToString("N");
-    //     await _bucketOperations.CreateBucketAsync(bucketName, cancellationToken);
+    [Fact]
+    public async Task DeleteBucketAsync_ShouldDeleteBucketAsync()
+    {
+        // Arrange
+        var bucketName = _bucketPrefix + "-" + Guid.NewGuid().ToString("N");
+        await _bucketOperations.CreateBucketAsync(bucketName, cancellationToken);
 
-    //     // Act
-    //     await _bucketOperations.DeleteBucketAsync(bucketName, cancellationToken);
+        // Act
+        await _bucketOperations.DeleteBucketAsync(bucketName, cancellationToken);
 
-    //     // Assert
-    //     Assert.False(await _bucketOperations.DoesBucketExistAsync(bucketName, cancellationToken));
-    // }
+        // Assert
+        Assert.False(await _bucketOperations.DoesBucketExistAsync(bucketName, cancellationToken));
+    }
 
 
     public void Dispose()
     {
-        // foreach (var bucketName in _createdBucketNames)
-        // {
-        //     _bucketOperations.DeleteBucketAsync(bucketName, cancellationToken).Wait();
-        // }
+        foreach (var bucketName in _createdBucketNames)
+        {
+            _bucketOperations.DeleteBucketAsync(bucketName, cancellationToken).Wait();
+        }
     }
 }
