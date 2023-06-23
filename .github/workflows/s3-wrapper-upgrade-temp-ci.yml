@@ -22,8 +22,7 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: 7.0.x
-    
+        dotnet-version: 7.0.x 
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
@@ -42,4 +41,3 @@ jobs:
       run: |
         curl -Ls https://coverage.codacy.com/get.sh -o codacy_script.sh
         bash codacy_script.sh report -r coverage/coverage.cobertura.xml
-
