@@ -19,21 +19,21 @@ public class BucketOperationsTests : TestBase, IDisposable
         Assert.True(true);
     }
 
-    // [Fact]
-    // public async Task CreateBucketAsync_ShouldCreateBucketAsync()
-    // {
-    //     // Arrange
-    //     var bucketName = _bucketPrefix + "-" + Guid.NewGuid().ToString("N");
+    [Fact]
+    public async Task CreateBucketAsync_ShouldCreateBucketAsync()
+    {
+        // Arrange
+        var bucketName = _bucketPrefix + "-" + Guid.NewGuid().ToString("N");
 
-    //     // Act
-    //     await _bucketOperations.CreateBucketAsync(bucketName, cancellationToken);
+        // Act
+        await _bucketOperations.CreateBucketAsync(bucketName, cancellationToken);
 
-    //     // Assert
-    //     Assert.True(await _bucketOperations.DoesBucketExistAsync(bucketName, cancellationToken));
+        // Assert
+        Assert.True(await _bucketOperations.DoesBucketExistAsync(bucketName, cancellationToken));
 
-    //     // for cleanup
-    //     _createdBucketNames.Add(bucketName);
-    // }
+        // for cleanup
+        _createdBucketNames.Add(bucketName);
+    }
 
     // [Fact]
     // public async Task CreateBucketAsync_ShouldThrowExceptionOnFailureAsync()
