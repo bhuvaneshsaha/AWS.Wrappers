@@ -37,6 +37,8 @@ public class FileOperationsTests : TestBase, IDisposable
 
         // assert
         var actualContent = await _fileOperations.GetFileAsync(bucketName, objectKey, cancellationToken);
+
+        Assert.NotNull(actualContent);
                     
         _createdBucketNames.Add(bucketName);
 
