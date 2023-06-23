@@ -33,7 +33,7 @@ jobs:
     - name: Copy coverage report
       run: |
           mkdir -p coverage
-          cp my-app/AWS.S3.Wrapper.Tests/TestResults/*/coverage.cobertura.xml coverage/coverage.cobertura.xml
+          cp AWS.S3.Wrapper.Tests/TestResults/*/coverage.cobertura.xml coverage/coverage.cobertura.xml
 
     - name: Install cURL
       run: sudo apt-get install curl -y
