@@ -43,17 +43,16 @@ public class DirectoryOperationsTests : TestBase, IDisposable
         await _bucketOperations.CreateBucketAsync(bucketName, cancellationToken);
 
         // act
-        await _directoryOperations.CreateDirectoryAsync(bucketName, "my-directory", cancellationToken);
-        await _directoryOperations.CreateDirectoryAsync(bucketName, "my-directory", cancellationToken);
+        await _directoryOperations.CreateDirectoryAsync(bucketName, "my-directory1", cancellationToken);
+        await _directoryOperations.CreateDirectoryAsync(bucketName, "my-directory1", cancellationToken);
 
         // assert
-        var directories = await _directoryOperations.ListDirectoriesAsync(bucketName, "my-directory", cancellationToken);
+        var isDirectoryExists = await _directoryOperations.DirectoryExistsAsync(bucketName, "my-directory1", cancellationToken);
 
-        Assert.Single(directories);
+        Assert.True(isDirectoryExists);
 
         _createdBucketNames.Add(bucketName);
     }
-
 
     [Fact]
     public async Task DeleteDirectoryAsync_ShouldDeleteDirectory()

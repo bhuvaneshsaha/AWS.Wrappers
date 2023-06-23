@@ -10,14 +10,14 @@ public class DirectoryOperations : IDirectoryOperations
     }
     public async Task CreateDirectoryAsync(string bucketName, string directoryPath, CancellationToken cancellationToken)
     {
-        if (await DirectoryExistsAsync(bucketName, directoryPath, cancellationToken))
-        {
-            return;
-        }
-
         if (!directoryPath.EndsWith("/"))
         {
             directoryPath += "/";
+        }
+
+        if (await DirectoryExistsAsync(bucketName, directoryPath, cancellationToken))
+        {
+            return;
         }
 
         var putObjectRequest = new PutObjectRequest
