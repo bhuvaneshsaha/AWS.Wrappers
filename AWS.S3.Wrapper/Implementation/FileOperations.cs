@@ -63,7 +63,6 @@ namespace AWS.S3.Wrapper.Implementation
                     throw;
                 }
             }
-
         }
 
         public async Task<Stream> GetFileAsync(string bucketName, string objectKey, CancellationToken cancellationToken)
@@ -94,7 +93,6 @@ namespace AWS.S3.Wrapper.Implementation
 
             return response.S3Objects.Select(x => x.Key);
         }
-
 
         public async Task PutFileAsync(string bucketName, string objectKey, Stream content, string contentType, CancellationToken cancellationToken)
         {

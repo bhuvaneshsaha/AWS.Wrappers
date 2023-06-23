@@ -29,9 +29,8 @@ public class FileOperationsTests : TestBase, IDisposable
         var actualContent = await _fileOperations.GetFileAsync(bucketName, objectKey, cancellationToken);
 
         Assert.NotNull(actualContent);
-                    
-        _createdBucketNames.Add(bucketName);
 
+        _createdBucketNames.Add(bucketName);
     }
 
     [Fact]
@@ -57,7 +56,7 @@ public class FileOperationsTests : TestBase, IDisposable
         var actualContent = await _fileOperations.GetFileAsync(destinationBucketName, objectKey, cancellationToken);
 
         Assert.NotNull(actualContent);
-                    
+
         _createdBucketNames.Add(sourceBucketName);
         _createdBucketNames.Add(destinationBucketName);
     }
@@ -82,12 +81,13 @@ public class FileOperationsTests : TestBase, IDisposable
         var actualContent = await _fileOperations.DoseFileExistAsync(bucketName, objectKey, cancellationToken);
 
         Assert.False(actualContent);
-                    
+
         _createdBucketNames.Add(bucketName);
     }
 
     [Fact]
-    public async Task ListObjectsAsync() {
+    public async Task ListObjectsAsync()
+    {
         // arrange
         var bucketName = $"{_bucketPrefix}-{Guid.NewGuid()}";
         await _bucketOperations.CreateBucketAsync(bucketName, cancellationToken);
@@ -104,7 +104,7 @@ public class FileOperationsTests : TestBase, IDisposable
         // assert
         Assert.NotNull(actualContent);
         Assert.Single(actualContent);
-                    
+
         _createdBucketNames.Add(bucketName);
     }
 
