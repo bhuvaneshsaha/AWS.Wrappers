@@ -1,7 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+// Reference: https://docs.aws.amazon.com/AmazonS3/latest/userguide/example_s3_Scenario_UsingLargeFiles_section.html
+
+using Amazon.S3.Transfer;
 
 namespace AWS.S3.Wrapper.Implementation
 {
@@ -48,9 +47,9 @@ namespace AWS.S3.Wrapper.Implementation
 
             try
             {
-            var response = await _s3Client.GetObjectMetadataAsync(request, cancellationToken);
+                var response = await _s3Client.GetObjectMetadataAsync(request, cancellationToken);
 
-            return response.HttpStatusCode == System.Net.HttpStatusCode.OK;
+                return response.HttpStatusCode == System.Net.HttpStatusCode.OK;
             }
             catch (Amazon.S3.AmazonS3Exception ex)
             {
@@ -94,7 +93,7 @@ namespace AWS.S3.Wrapper.Implementation
             return response.S3Objects.Select(x => x.Key);
         }
 
-        public async Task PutFileAsync(string bucketName, string objectKey, Stream content, string contentType, CancellationToken cancellationToken)
+        public async Task UploadFileStreamAsync(string bucketName, string objectKey, Stream content, string contentType, CancellationToken cancellationToken)
         {
             var request = new Amazon.S3.Model.PutObjectRequest
             {
@@ -105,6 +104,36 @@ namespace AWS.S3.Wrapper.Implementation
             };
 
             await _s3Client.PutObjectAsync(request, cancellationToken);
+        }
+
+        public async Task<bool> UploadSingleFileAsync(string bucketName, string sourceFileFullPath, string destKey, CancellationToken cancellationToken)
+        {
+            var transferUtil = new TransferUtility(_s3Client);
+            if (File.Exists(sourceFileFullPath))
+            {
+                try
+                {
+                    await transferUtil.UploadAsync(new TransferUtilityUploadRequest
+                    {
+                        BucketName = bucketName,
+                        Key = destKey,
+                        FilePath = sourceFileFullPath,
+                    });
+
+                    return true;
+                }
+                catch (AmazonS3Exception s3Ex)
+                {
+                    Console.WriteLine($"Could not upload {sourceFileFullPath} to {destKey} because:");
+                    Console.WriteLine(s3Ex.Message);
+                    return false;
+                }
+            }
+            else
+            {
+                Console.WriteLine($"{sourceFileFullPath} does not exist");
+                return false;
+            }
         }
     }
 }

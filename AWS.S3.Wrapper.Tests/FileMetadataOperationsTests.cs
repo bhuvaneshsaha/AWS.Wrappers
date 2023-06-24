@@ -20,7 +20,7 @@ public class FileMetadataOperationsTests : TestBase, IDisposable
         var contentType = "text/plain";
 
         // act
-        await _fileOperations.PutFileAsync(bucketName, objectKey, content, contentType, cancellationToken);
+        await _fileOperations.UploadFileStreamAsync(bucketName, objectKey, content, contentType, cancellationToken);
 
         var metadata = new Dictionary<string, string>
         {
