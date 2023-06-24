@@ -37,6 +37,8 @@ IBucketOperations bucketOperations = new BucketOperations(s3Client);
 await bucketOperations.CreateBucketAsync("my-bucket");
 ```
 
+> **Note**: While this wrapper provides a familiar way to interact with Amazon S3, it's important to remember that S3 doesn't have the same concept of files and directories like a traditional file system. Instead, it functions based on key-value pairs. In S3, the key is used to represent the file path or object name, while the value corresponds to the actual file content. However, you can structure the key to resemble a directory path, allowing for a hierarchical organization of objects within the S3 bucket.
+
 Please find the available methods below
 ## Bucket Operations
 | Method Name          | Description                                      | How to Use                                                                   | Example                                                                                              |   |
@@ -66,3 +68,10 @@ Please find the available methods below
 | ListObjectsAsync      | Lists objects in an S3 bucket.                   | Provide the bucket name, prefix, delimiter, max keys, and a cancellation token. Returns an enumerable of object keys.                                        | var objectKeys = await fileOperations.ListObjectsAsync("bucket-name", "prefix", "delimiter", 1000, cancellationToken);                             |   |
 | UploadFileStreamAsync | Uploads a file to an S3 bucket from a stream.    | Provide the bucket name, object key, stream containing the file contents, content type, and a cancellation token.                                            | await fileOperations.UploadFileStreamAsync("bucket-name", "object-key", fileStream, "text/plain", cancellationToken);                              |   |
 | UploadSingleFileAsync | Uploads a file to an S3 bucket from a file path. | Provide the bucket name, source file path, destination object key, and a cancellation token. Returns a boolean indicating whether the upload was successful. | var uploadSuccessful = await fileOperations.UploadSingleFileAsync("bucket-name", "source-file-path", "destination-object-key", cancellationToken); |   |
+
+
+### File Metadata Operations
+| Method Name               | Description                                         | How to Use                                                                                                            | Example                                                                                                             |
+|---------------------------|-----------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------|
+| GetObjectMetadataAsync    | Gets the metadata for an object in an S3 bucket.    | Provide the bucket name, object key, and a cancellation token. Returns a dictionary containing the object's metadata. | var metadata = await fileMetadataOperations.GetObjectMetadataAsync("bucket-name", "object-key", cancellationToken); |
+| UpdateObjectMetadataAsync | Updates the metadata for an object in an S3 bucket. | Provide the bucket name, object key, metadata dictionary, and a cancellation token.                                   | await fileMetadataOperations.UpdateObjectMetadataAsync("bucket-name", "object-key", metadata, cancellationToken);   |
