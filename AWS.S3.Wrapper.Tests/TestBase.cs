@@ -7,6 +7,7 @@ public class TestBase
     protected readonly IDirectoryOperations _directoryOperations;
     protected readonly IFileOperations _fileOperations;
     protected readonly IFileMetadataOperations _fileMetadataOperations;
+    protected readonly ILargeFileOperations _largeFileOperations;
     protected readonly string _bucketPrefix = "my-unit-test-bucket";
     protected readonly CancellationToken cancellationToken = default;
     public TestBase()
@@ -15,5 +16,6 @@ public class TestBase
         _directoryOperations = new DirectoryOperations(client);
         _fileOperations = new FileOperations(client);
         _fileMetadataOperations = new FileMetadataOperations(client);
+        _largeFileOperations = new LargeFileOperations(client);
     }
 }
