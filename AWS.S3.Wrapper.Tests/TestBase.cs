@@ -18,4 +18,21 @@ public class TestBase
         _fileMetadataOperations = new FileMetadataOperations(client);
         _largeFileOperations = new LargeFileOperations(client);
     }
+
+    // List and delete all buckets with the prefix my-unit-test-bucket
+    [Fact (Skip = "For cleanup only")]
+    protected async Task DeleteAllBucketsAsync()
+    {
+        var buckets = await _bucketOperations.ListBucketsAsync(cancellationToken);
+        foreach (var bucket in buckets)
+        {
+            if (bucket.StartsWith(_bucketPrefix))
+            {
+                await _bucketOperations.EmptyBucketAsync(bucket, cancellationToken);
+                await _bucketOperations.DeleteBucketAsync(bucket, cancellationToken);
+            }
+        }
+
+        Assert.True(true);
+    }
 }
