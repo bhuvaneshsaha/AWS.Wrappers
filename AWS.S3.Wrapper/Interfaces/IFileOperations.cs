@@ -14,6 +14,5 @@ namespace AWS.S3.Wrapper.Interfaces
         Task CopyFileAsync(string sourceBucket, string sourceObjectKey, string destinationBucket, string destinationObjectKey, CancellationToken cancellationToken);
         Task<IEnumerable<string>> ListObjectsAsync(string bucketName, string prefix, string delimiter, int maxKeys, CancellationToken cancellationToken);
         public Task<bool> UploadSingleFileAsync(string bucketName, string sourceFileFullPath, string destKey, CancellationToken cancellationToken);
-
     }
 }
