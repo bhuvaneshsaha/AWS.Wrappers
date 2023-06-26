@@ -18,6 +18,7 @@ jobs:
       CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
     steps:
     - uses: actions/checkout@v3
@@ -35,11 +36,11 @@ jobs:
       run: |
           mkdir -p coverage
           cp AWS.S3.Wrapper.Tests/TestResults/*/coverage.cobertura.xml coverage/coverage.cobertura.xml
-
     - name: Install cURL
       run: sudo apt-get install curl -y
-
     - name: Download and run Codacy script
       run: |
         curl -Ls https://coverage.codacy.com/get.sh -o codacy_script.sh
         bash codacy_script.sh report -r coverage/coverage.cobertura.xml
+    - name: Upload coverage reports to Codecov
+      uses: codecov/codecov-action@v3
