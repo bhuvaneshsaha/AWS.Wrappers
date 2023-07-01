@@ -1,8 +1,5 @@
 
-using Amazon.S3.Util;
-
 namespace AWS.S3.Wrapper.Implementation;
-
 public class BucketOperations : IBucketOperations
 {
     private readonly IAmazonS3 _s3Client;

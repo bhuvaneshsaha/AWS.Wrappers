@@ -1,6 +1,5 @@
 
 namespace AWS.S3.Wrapper.Implementation;
-
 public class DirectoryOperations : IDirectoryOperations
 {
     private readonly IAmazonS3 _s3Client;

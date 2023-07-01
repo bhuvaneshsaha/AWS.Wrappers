@@ -1,13 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Threading;
-using System.Threading.Tasks;
-using Amazon.S3;
 
 namespace AWS.S3.Wrapper.Implementation;
-
 public class FileMetadataOperations : IFileMetadataOperations
 {
     private readonly IAmazonS3 _s3Client;

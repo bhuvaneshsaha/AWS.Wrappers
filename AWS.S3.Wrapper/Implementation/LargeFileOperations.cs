@@ -1,7 +1,5 @@
-﻿using Amazon.S3.Transfer;
-
+﻿
 namespace AWS.S3.Wrapper.Implementation;
-
 public class LargeFileOperations : ILargeFileOperations
 {
     private readonly IAmazonS3 _s3Client;
