@@ -6,6 +6,7 @@
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/14753260313949559c4c9012cb70bc97)](https://app.codacy.com/gh/bhuvaneshsaha/AWS.Wrappers/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 [![Codacy Badge](https://app.codacy.com/project/badge/Coverage/14753260313949559c4c9012cb70bc97)](https://app.codacy.com/gh/bhuvaneshsaha/AWS.Wrappers/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_coverage)
 [![codecov](https://codecov.io/gh/bhuvaneshsaha/AWS.Wrappers/branch/master/graph/badge.svg?token=CL7JXQF2MI)](https://codecov.io/gh/bhuvaneshsaha/AWS.Wrappers)
+[![Open Source Helpers](https://www.codetriage.com/bhuvaneshsaha/aws.wrappers/badges/users.svg)](https://www.codetriage.com/bhuvaneshsaha/aws.wrappers)
 
 ![Image Caption](https://codecov.io/gh/bhuvaneshsaha/AWS.Wrappers/branch/master/graphs/icicle.svg?token=CL7JXQF2MI)
 
