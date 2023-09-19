@@ -10,7 +10,7 @@
 
 ![Image Caption](https://codecov.io/gh/bhuvaneshsaha/AWS.Wrappers/branch/master/graphs/icicle.svg?token=CL7JXQF2MI)
 
-AWS Wrappers is a straightforward **.NET 6 C# class library** to perform basic operations AWS S3 from the .NET core application which is built on top of AWS libraries, which Amazon Web Services provide.
+AWS Wrappers is a straightforward **.NET 7 C# class library** to perform basic operations AWS S3 from the .NET core application which is built on top of AWS libraries, which Amazon Web Services provide.
 
 The AWS libraries provide all the features needed to perform operations with AWS, but they are sometimes not straight forward to use and we need to implement them in our application.
 
@@ -86,7 +86,7 @@ Please find the available methods below
 | Method Name                                 | Description                                                  | How to Use                                                                                                                                           | Example                                                                                                                                   |
 |---------------------------------------------|--------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------|
 | AbortMultipartUploadAsync                   | Aborts a multipart upload for a large file in an S3 bucket.  | Provide the bucket name, object key, upload ID, and a cancellation token.                                                                            | await largeFileOperations.AbortMultipartUploadAsync("bucket-name", "object-key", "upload-id", cancellationToken);                         |
-| ~~UploadFullDirectoryAsync~~ (Pending)      | Uploads the contents of a local directory to an S3 bucket.   | Provide the bucket name, key prefix, local directory path, and a cancellation token. Returns a boolean indicating whether the upload was successful. | var success = await largeFileOperations.UploadFullDirectoryAsync("bucket-name", "key-prefix", "local-directory-path", cancellationToken); |
+| UploadFullDirectoryAsync      | Uploads the contents of a local directory to an S3 bucket.   | Provide the bucket name, key prefix, local directory path, and a cancellation token. Returns a boolean indicating whether the upload was successful. | var success = await largeFileOperations.UploadFullDirectoryAsync("bucket-name", "key-prefix", "local-directory-path", cancellationToken); |
 | ~~UploadLargeFileMultipartAsync~~ (Pending) | Uploads a large file to an S3 bucket using multipart upload. | Provide the bucket name, object key, input stream, part size, and a cancellation token.                                                              | await largeFileOperations.UploadLargeFileMultipartAsync("bucket-name", "object-key", inputStream, partSize, cancellationToken);           |.
 
 ### Presigned Url Operations
