@@ -10,15 +10,15 @@
 
 ![Image Caption](https://codecov.io/gh/bhuvaneshsaha/AWS.Wrappers/branch/master/graphs/icicle.svg?token=CL7JXQF2MI)
 
-AWS Wrappers is a straightforward **.NET 7 C# class library** to perform basic operations AWS S3 from the .NET core application which is built on top of AWS libraries, which Amazon Web Services provide.
+AWS Wrappers is a straightforward **.NET 8 C# class library** to perform basic operations AWS S3 from the .NET core application which is built on top of AWS libraries, which Amazon Web Services provide.
 
 The AWS libraries provide all the features needed to perform operations with AWS, but they are sometimes not straight forward to use and we need to implement them in our application.
 
 So, AWS Wrappers S3 is designed to do basic operations such as creating buckets, uploading files, creating folders, etc. with the AWS Simple Storage Services (S3) with simple, user-readable methods that already implement the codes required to perform the operation.
 
 ### Prerequisites
- - .NET 7
- - AWSSDK.S3 [Version 3.7.104.30]
+ - .NET 8
+ - AWSSDK.S3 [Version 3.7.304.10]
 
 ## Usage
 Clone the code from the master branch or download stable release from the release area.
