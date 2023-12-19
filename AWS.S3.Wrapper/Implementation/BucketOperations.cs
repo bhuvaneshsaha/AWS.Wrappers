@@ -1,14 +1,7 @@
 
 namespace AWS.S3.Wrapper.Implementation;
-public class BucketOperations : IBucketOperations
+public class BucketOperations(IAmazonS3 s3Client) : IBucketOperations
 {
-    private readonly IAmazonS3 _s3Client;
-
-    public BucketOperations(IAmazonS3 s3Client)
-    {
-        this._s3Client = s3Client;
-    }
-
     public async Task CreateBucketAsync(string bucketName, CancellationToken cancellationToken)
     {
         if (await DoesBucketExistAsync(bucketName, cancellationToken))
@@ -21,7 +14,7 @@ public class BucketOperations : IBucketOperations
             BucketName = bucketName,
             UseClientRegion = true
         };
-        await _s3Client.PutBucketAsync(putBucketRequest, cancellationToken);
+        await s3Client.PutBucketAsync(putBucketRequest, cancellationToken);
     }
 
     public async Task DeleteBucketAsync(string bucketName, CancellationToken cancellationToken)
@@ -30,18 +23,18 @@ public class BucketOperations : IBucketOperations
         {
             BucketName = bucketName
         };
-        await _s3Client.DeleteBucketAsync(deleteBucketRequest, cancellationToken);
+        await s3Client.DeleteBucketAsync(deleteBucketRequest, cancellationToken);
     }
 
     public async Task<bool> DoesBucketExistAsync(string bucketName, CancellationToken cancellationToken)
     {
-        return await AmazonS3Util.DoesS3BucketExistV2Async(_s3Client, bucketName);
+        return await AmazonS3Util.DoesS3BucketExistV2Async(s3Client, bucketName);
     }
 
     public async Task<IEnumerable<string>> ListBucketsAsync(CancellationToken cancellationToken)
     {
         var listBucketsRequest = new ListBucketsRequest();
-        var response = await _s3Client.ListBucketsAsync(listBucketsRequest, cancellationToken);
+        var response = await s3Client.ListBucketsAsync(listBucketsRequest, cancellationToken);
         return response.Buckets.Select(x => x.BucketName);
     }
 
@@ -56,7 +49,7 @@ public class BucketOperations : IBucketOperations
 
         do
         {
-            listObjectsResponse = await _s3Client.ListObjectsV2Async(listObjectsRequest, cancellationToken);
+            listObjectsResponse = await s3Client.ListObjectsV2Async(listObjectsRequest, cancellationToken);
 
             if (listObjectsResponse.KeyCount > 0)
             {
@@ -66,7 +59,7 @@ public class BucketOperations : IBucketOperations
                     Objects = listObjectsResponse.S3Objects.Select(x => new KeyVersion { Key = x.Key }).ToList()
                 };
 
-                await _s3Client.DeleteObjectsAsync(deleteObjectsRequest, cancellationToken);
+                await s3Client.DeleteObjectsAsync(deleteObjectsRequest, cancellationToken);
             }
 
             listObjectsRequest.ContinuationToken = listObjectsResponse.NextContinuationToken;

@@ -1,13 +1,7 @@
 ﻿
 namespace AWS.S3.Wrapper.Implementation;
-public class LargeFileOperations : ILargeFileOperations
+public class LargeFileOperations(IAmazonS3 s3Client) : ILargeFileOperations
 {
-    private readonly IAmazonS3 _s3Client;
-
-    public LargeFileOperations(IAmazonS3 s3Client)
-    {
-        _s3Client = s3Client;
-    }
     public Task AbortMultipartUploadAsync(string bucketName, string objectKey, string uploadId, CancellationToken cancellationToken)
     {
         throw new NotImplementedException();
@@ -15,7 +9,7 @@ public class LargeFileOperations : ILargeFileOperations
 
     public async Task<bool> UploadFullDirectoryAsync(string bucketName, string keyPrefix, string localPath, CancellationToken cancellationToken)
     {
-        var transferUtil = new TransferUtility(_s3Client);
+        var transferUtil = new TransferUtility(s3Client);
         if (Directory.Exists(localPath))
         {
             try

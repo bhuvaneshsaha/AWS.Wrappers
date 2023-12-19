@@ -1,12 +1,7 @@
 
 namespace AWS.S3.Wrapper.Implementation;
-public class DirectoryOperations : IDirectoryOperations
+public class DirectoryOperations(IAmazonS3 s3Client) : IDirectoryOperations
 {
-    private readonly IAmazonS3 _s3Client;
-    public DirectoryOperations(IAmazonS3 s3Client)
-    {
-        _s3Client = s3Client;
-    }
     public async Task CreateDirectoryAsync(string bucketName, string directoryPath, CancellationToken cancellationToken)
     {
         if (!directoryPath.EndsWith('/'))
@@ -26,7 +21,7 @@ public class DirectoryOperations : IDirectoryOperations
             InputStream = new MemoryStream()
         };
 
-        await _s3Client.PutObjectAsync(putObjectRequest, cancellationToken);
+        await s3Client.PutObjectAsync(putObjectRequest, cancellationToken);
     }
     
     public async Task DeleteDirectoryAsync(string bucketName, string directoryPath, CancellationToken cancellationToken)
@@ -44,7 +39,7 @@ public class DirectoryOperations : IDirectoryOperations
         do
         {
             // List all objects under the directory
-            listObjectsResponse = await _s3Client.ListObjectsV2Async(listObjectsRequest, cancellationToken);
+            listObjectsResponse = await s3Client.ListObjectsV2Async(listObjectsRequest, cancellationToken);
             if (listObjectsResponse.S3Objects.Count > 0)
             {
                 // Delete all objects under the directory
@@ -53,7 +48,7 @@ public class DirectoryOperations : IDirectoryOperations
                     BucketName = bucketName,
                     Objects = listObjectsResponse.S3Objects.Select(o => new KeyVersion { Key = o.Key }).ToList()
                 };
-                await _s3Client.DeleteObjectsAsync(deleteObjectsRequest, cancellationToken);
+                await s3Client.DeleteObjectsAsync(deleteObjectsRequest, cancellationToken);
             }
 
             // If response is truncated, set the marker to get the next batch of objects
@@ -81,7 +76,7 @@ public class DirectoryOperations : IDirectoryOperations
         do
         {
             // List objects and common prefixes under the directory
-            listObjectsResponse = await _s3Client.ListObjectsV2Async(listObjectsRequest, cancellationToken);
+            listObjectsResponse = await s3Client.ListObjectsV2Async(listObjectsRequest, cancellationToken);
 
             // Add the common prefixes to the directories list
             directories.AddRange(listObjectsResponse.CommonPrefixes);
@@ -113,7 +108,7 @@ public class DirectoryOperations : IDirectoryOperations
         do
         {
             // List all objects under the directory
-            listObjectsResponse = _s3Client.ListObjectsV2Async(listObjectsRequest, cancellationToken).Result;
+            listObjectsResponse = s3Client.ListObjectsV2Async(listObjectsRequest, cancellationToken).Result;
             if (listObjectsResponse.S3Objects.Count > 0)
             {
                 // Delete all objects under the directory
@@ -123,7 +118,7 @@ public class DirectoryOperations : IDirectoryOperations
                     Objects = listObjectsResponse.S3Objects.Select(o => new KeyVersion { Key = o.Key }).ToList()
                 };
 
-                await _s3Client.DeleteObjectsAsync(deleteObjectsRequest, cancellationToken);
+                await s3Client.DeleteObjectsAsync(deleteObjectsRequest, cancellationToken);
             }
 
             // If response is truncated, set the marker to get the next batch of objects
@@ -148,6 +143,6 @@ public class DirectoryOperations : IDirectoryOperations
             MaxKeys = 1
         };
 
-        return _s3Client.ListObjectsV2Async(listObjectsRequest, cancellationToken).ContinueWith(t => t.Result.KeyCount > 0);
+        return s3Client.ListObjectsV2Async(listObjectsRequest, cancellationToken).ContinueWith(t => t.Result.KeyCount > 0);
     }
 }
