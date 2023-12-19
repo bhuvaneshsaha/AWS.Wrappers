@@ -36,6 +36,24 @@ public class LargeFileOperationsTests : TestBase, IDisposable
 
         _createdBucketNames.Add(bucketName);
     }
+
+    [Fact]
+    public async Task UploadFullDirectoryAsync_InvalidPath_ShouldThrowArgumentException()
+    {
+        // arrange
+        var bucketName = $"{_bucketPrefix}-{Guid.NewGuid()}";
+
+        var localPath = "upload/NotAvailable/AAA";
+
+        // act
+        var exception = await Record
+            .ExceptionAsync(async () => 
+                await _largeFileOperations
+                    .UploadFullDirectoryAsync(bucketName, "test-obj", localPath, cancellationToken));
+
+        // assert
+        Assert.IsType<ArgumentException>(exception);
+    }
     
     public void Dispose()
     {
