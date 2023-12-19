@@ -34,8 +34,9 @@ public static class FileUtility
         var localPath = Directory.GetCurrentDirectory() + "/TestFiles";
 
         if (!Directory.Exists(localPath))
+        {
             Directory.CreateDirectory(localPath);
-
+        }
         return localPath;
     }
 
