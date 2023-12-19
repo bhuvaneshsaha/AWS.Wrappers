@@ -33,7 +33,7 @@ public static class FileUtility
     {
         var localPath = Directory.GetCurrentDirectory() + "/TestFiles";
 
-        if(!Directory.Exists(localPath))
+        if (!Directory.Exists(localPath))
             Directory.CreateDirectory(localPath);
 
         return localPath;
@@ -43,8 +43,10 @@ public static class FileUtility
     {
         var localPath = Directory.GetCurrentDirectory() + "/TestFiles/" + folderName;
 
-        if(!Directory.Exists(localPath))
+        if (!Directory.Exists(localPath))
+        {
             Directory.CreateDirectory(localPath);
+        }
 
         return localPath;
     }
