@@ -32,7 +32,7 @@ public class LargeFileOperations : ILargeFileOperations
             catch (AmazonS3Exception s3Ex)
             {
                 Console.WriteLine($"Can't upload the contents of {localPath} because:");
-                Console.WriteLine(s3Ex?.Message);
+                Console.WriteLine(s3Ex.Message);
                 return false;
             }
         }

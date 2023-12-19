@@ -9,7 +9,7 @@ public class DirectoryOperations : IDirectoryOperations
     }
     public async Task CreateDirectoryAsync(string bucketName, string directoryPath, CancellationToken cancellationToken)
     {
-        if (!directoryPath.EndsWith("/"))
+        if (!directoryPath.EndsWith('/'))
         {
             directoryPath += "/";
         }
@@ -31,7 +31,7 @@ public class DirectoryOperations : IDirectoryOperations
     
     public async Task DeleteDirectoryAsync(string bucketName, string directoryPath, CancellationToken cancellationToken)
     {
-        if (!directoryPath.EndsWith("/"))
+        if (!directoryPath.EndsWith('/'))
         {
             directoryPath += "/";
         }
@@ -66,7 +66,7 @@ public class DirectoryOperations : IDirectoryOperations
 
     public async Task<IEnumerable<string>> ListDirectoriesAsync(string bucketName, string parentDirectoryPath, CancellationToken cancellationToken)
     {
-        if (!string.IsNullOrEmpty(parentDirectoryPath) && !parentDirectoryPath.EndsWith("/"))
+        if (!string.IsNullOrEmpty(parentDirectoryPath) && !parentDirectoryPath.EndsWith('/'))
         {
             parentDirectoryPath += "/";
         }
@@ -98,7 +98,7 @@ public class DirectoryOperations : IDirectoryOperations
 
     public async Task EmptyDirectoryAsync(string bucketName, string directoryPath, CancellationToken cancellationToken)
     {
-        if (!directoryPath.EndsWith("/"))
+        if (!directoryPath.EndsWith('/'))
         {
             directoryPath += "/";
         }
@@ -136,7 +136,7 @@ public class DirectoryOperations : IDirectoryOperations
 
     public Task<bool> DirectoryExistsAsync(string bucketName, string directoryPath, CancellationToken cancellationToken)
     {
-        if (!directoryPath.EndsWith("/"))
+        if (!directoryPath.EndsWith('/'))
         {
             directoryPath += "/";
         }

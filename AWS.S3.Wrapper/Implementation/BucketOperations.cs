@@ -13,7 +13,7 @@ public class BucketOperations : IBucketOperations
     {
         if (await DoesBucketExistAsync(bucketName, cancellationToken))
         {
-            throw new Exception("Bucket already exist");
+            throw new ArgumentException("Bucket already exist");
         }
 
         var putBucketRequest = new PutBucketRequest
