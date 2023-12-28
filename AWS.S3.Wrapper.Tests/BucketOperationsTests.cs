@@ -33,7 +33,7 @@ public class BucketOperationsTests : TestBase, IDisposable
         await _bucketOperations.CreateBucketAsync(bucketName, cancellationToken);
 
         // Assert
-        await Assert.ThrowsAsync<Exception>(async () => await _bucketOperations.CreateBucketAsync(bucketName, cancellationToken));
+        await Assert.ThrowsAsync<ArgumentException>(async () => await _bucketOperations.CreateBucketAsync(bucketName, cancellationToken));
 
         // for cleanup
         _createdBucketNames.Add(bucketName);

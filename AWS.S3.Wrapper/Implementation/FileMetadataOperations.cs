@@ -1,14 +1,7 @@
 
 namespace AWS.S3.Wrapper.Implementation;
-public class FileMetadataOperations : IFileMetadataOperations
+public class FileMetadataOperations(IAmazonS3 s3Client) : IFileMetadataOperations
 {
-    private readonly IAmazonS3 _s3Client;
-
-    public FileMetadataOperations(IAmazonS3 s3Client)
-    {
-        _s3Client = s3Client;
-    }
-
     public async Task<IDictionary<string, string>> GetObjectMetadataAsync(string bucketName, string objectKey, CancellationToken cancellationToken)
     {
         var request = new Amazon.S3.Model.GetObjectMetadataRequest
@@ -17,7 +10,7 @@ public class FileMetadataOperations : IFileMetadataOperations
             Key = objectKey
         };
 
-        var response = await _s3Client.GetObjectMetadataAsync(request, cancellationToken);
+        var response = await s3Client.GetObjectMetadataAsync(request, cancellationToken);
         MetadataCollection metadataCollection = response.Metadata;
 
         return metadataCollection.Keys.ToDictionary(key => key, key => metadataCollection[key]);
@@ -40,6 +33,6 @@ public class FileMetadataOperations : IFileMetadataOperations
             copyRequest.Metadata[entry.Key] = copyRequest.Metadata[entry.Key].Replace("x-amz-meta-", "");
         }
 
-        await _s3Client.CopyObjectAsync(copyRequest, cancellationToken);
+        await s3Client.CopyObjectAsync(copyRequest, cancellationToken);
     }
 }

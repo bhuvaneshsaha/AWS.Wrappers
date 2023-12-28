@@ -1,10 +1,12 @@
 
+using AWS.S3.Wrapper.Tests.Utilities;
+
 namespace AWS.S3.Wrapper.Tests;
 
 [Collection("Our Test Collection #1")]
 public class LargeFileOperationsTests : TestBase, IDisposable
 {
-    private readonly List<string> _createdBucketNames = new();
+    private readonly List<string> _createdBucketNames = [];
 
     [Fact]
     public async Task UploadFullDirectoryAsync_ShouldUploadAllLocalFiles()
@@ -14,38 +16,45 @@ public class LargeFileOperationsTests : TestBase, IDisposable
         await _bucketOperations.CreateBucketAsync(bucketName, cancellationToken);
 
         var fileNames = new List<string> { "my-file1.txt", "my-file2.txt", "my-file3.txt" };
-        var localPath = Directory.GetCurrentDirectory();
-        var fullPathList = new List<string>();
+        var localPath = FileUtility.GetLocalTestFilesPathWithFolder("UploadFullDirectoryAsync");
 
-        foreach (var fileName in fileNames)
-        {
-            var fullPath = Path.Combine(localPath, fileName);
-            fullPathList.Add(fullPath);
-
-            if (!File.Exists(fullPath))
-            {
-                await File.WriteAllTextAsync(fullPath, $"Hello World {fileNames.IndexOf(fileName) + 1}!");
-            }
-        }
+        await FileUtility.CreateFileInLocal(fileNames, localPath);
 
         // act
-        var actualContent = await _largeFileOperations.UploadFullDirectoryAsync(bucketName, "upload", localPath, cancellationToken);
+        await _largeFileOperations.UploadFullDirectoryAsync(bucketName, "upload", localPath, cancellationToken);
 
         // assert
-        Assert.True(actualContent);
+        foreach (var fileName in fileNames)
+        {
+            var objectKey = $"upload/{fileName}";
+            var fileExists = await _fileOperations.DoseFileExistAsync(bucketName, objectKey, cancellationToken);
+            Assert.True(fileExists);
+        }
 
         // cleanup
-        foreach (var fullPath in fullPathList)
-        {
-            if (File.Exists(fullPath))
-            {
-                File.Delete(fullPath);
-            }
-        }
+        FileUtility.DeleteFilesInDirectory(localPath);
 
         _createdBucketNames.Add(bucketName);
     }
 
+    [Fact]
+    public async Task UploadFullDirectoryAsync_InvalidPath_ShouldThrowArgumentException()
+    {
+        // arrange
+        var bucketName = $"{_bucketPrefix}-{Guid.NewGuid()}";
+
+        var localPath = "upload/NotAvailable/AAA";
+
+        // act
+        var exception = await Record
+            .ExceptionAsync(async () => 
+                await _largeFileOperations
+                    .UploadFullDirectoryAsync(bucketName, "test-obj", localPath, cancellationToken));
+
+        // assert
+        Assert.IsType<ArgumentException>(exception);
+    }
+    
     public void Dispose()
     {
         foreach (var bucketName in _createdBucketNames)

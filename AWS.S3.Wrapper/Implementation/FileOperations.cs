@@ -1,15 +1,8 @@
 // Reference: https://docs.aws.amazon.com/AmazonS3/latest/userguide/example_s3_Scenario_UsingLargeFiles_section.html
 
 namespace AWS.S3.Wrapper.Implementation;
-public class FileOperations : IFileOperations
+public class FileOperations(IAmazonS3 s3Client) : IFileOperations
 {
-    private readonly IAmazonS3 _s3Client;
-
-    public FileOperations(IAmazonS3 s3Client)
-    {
-        _s3Client = s3Client;
-    }
-
     public async Task CopyFileAsync(string sourceBucket, string sourceObjectKey, string destinationBucket, string destinationObjectKey, CancellationToken cancellationToken)
     {
         var request = new Amazon.S3.Model.CopyObjectRequest
@@ -20,7 +13,7 @@ public class FileOperations : IFileOperations
             DestinationKey = destinationObjectKey
         };
 
-        await _s3Client.CopyObjectAsync(request, cancellationToken);
+        await s3Client.CopyObjectAsync(request, cancellationToken);
     }
 
     public async Task DeleteFileAsync(string bucketName, string objectKey, CancellationToken cancellationToken)
@@ -31,7 +24,7 @@ public class FileOperations : IFileOperations
             Key = objectKey
         };
 
-        await _s3Client.DeleteObjectAsync(request, cancellationToken);
+        await s3Client.DeleteObjectAsync(request, cancellationToken);
     }
 
     public async Task<bool> DoseFileExistAsync(string bucketName, string objectKey, CancellationToken cancellationToken)
@@ -44,7 +37,7 @@ public class FileOperations : IFileOperations
 
         try
         {
-            var response = await _s3Client.GetObjectMetadataAsync(request, cancellationToken);
+            var response = await s3Client.GetObjectMetadataAsync(request, cancellationToken);
 
             return response.HttpStatusCode == System.Net.HttpStatusCode.OK;
         }
@@ -70,7 +63,7 @@ public class FileOperations : IFileOperations
             Key = objectKey
         };
 
-        var response = await _s3Client.GetObjectAsync(request, cancellationToken);
+        var response = await s3Client.GetObjectAsync(request, cancellationToken);
 
         return response.ResponseStream;
     }
@@ -85,7 +78,7 @@ public class FileOperations : IFileOperations
             MaxKeys = maxKeys
         };
 
-        var response = await _s3Client.ListObjectsAsync(request, cancellationToken);
+        var response = await s3Client.ListObjectsAsync(request, cancellationToken);
 
         return response.S3Objects.Select(x => x.Key);
     }
@@ -100,12 +93,12 @@ public class FileOperations : IFileOperations
             ContentType = contentType
         };
 
-        await _s3Client.PutObjectAsync(request, cancellationToken);
+        await s3Client.PutObjectAsync(request, cancellationToken);
     }
 
     public async Task<bool> UploadSingleFileAsync(string bucketName, string sourceFileFullPath, string destKey, CancellationToken cancellationToken)
     {
-        var transferUtil = new TransferUtility(_s3Client);
+        var transferUtil = new TransferUtility(s3Client);
         if (File.Exists(sourceFileFullPath))
         {
             try
