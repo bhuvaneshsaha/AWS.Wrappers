@@ -46,10 +46,17 @@ jobs:
       - name: Install coverage tools
         run: |
           dotnet tool install --global coverlet.console
-          dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura
       - name: Build and analyze
         shell: powershell
         run: |
-          .\.sonar\scanner\dotnet-sonarscanner begin /k:"bhuvaneshsaha" /o:"bhuvaneshsaha" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.vscoveragexml.reportsPaths="**/*.cobertura.xml"
-          dotnet build
+          .\.sonar\scanner\dotnet-sonarscanner begin /k:"bhuvaneshsaha" /o:"bhuvaneshsaha" 
+                /d:sonar.token="${{ secrets.SONAR_TOKEN }}" 
+                /d:sonar.host.url="https://sonarcloud.io" 
+                /d:sonar.cs.opencover.reportsPaths=coverage.xml
+          dotnet build --no-incremental
+          coverlet .\CovExample.Tests\bin\Debug\net6.0\CovExample.Tests.dll
+                --target "dotnet" 
+                --targetargs "test --no-build"
+                -f=opencover 
+                -o="coverage.xml"
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
