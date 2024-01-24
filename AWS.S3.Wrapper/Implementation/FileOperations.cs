@@ -41,16 +41,9 @@ public class FileOperations(IAmazonS3 s3Client) : IFileOperations
 
             return response.HttpStatusCode == System.Net.HttpStatusCode.OK;
         }
-        catch (Amazon.S3.AmazonS3Exception ex)
+        catch (Amazon.S3.AmazonS3Exception ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
         {
-            if (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
-            {
-                return false;
-            }
-            else
-            {
-                throw;
-            }
+            return false;
         }
     }
 
@@ -101,23 +94,14 @@ public class FileOperations(IAmazonS3 s3Client) : IFileOperations
         var transferUtil = new TransferUtility(s3Client);
         if (File.Exists(sourceFileFullPath))
         {
-            try
+            await transferUtil.UploadAsync(new TransferUtilityUploadRequest
             {
-                await transferUtil.UploadAsync(new TransferUtilityUploadRequest
-                {
-                    BucketName = bucketName,
-                    Key = destKey,
-                    FilePath = sourceFileFullPath,
-                });
+                BucketName = bucketName,
+                Key = destKey,
+                FilePath = sourceFileFullPath,
+            });
 
-                return true;
-            }
-            catch (AmazonS3Exception s3Ex)
-            {
-                Console.WriteLine($"Could not upload {sourceFileFullPath} to {destKey} because:");
-                Console.WriteLine(s3Ex.Message);
-                return false;
-            }
+            return true;
         }
         else
         {
