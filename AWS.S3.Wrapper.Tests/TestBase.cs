@@ -26,7 +26,7 @@ public class TestBase
     }
 
     // List and delete all buckets with the prefix my-unit-test-bucket
-    [Fact (Skip = "For cleanup only")]
+    [Fact(Skip = "For cleanup only")]
     protected async Task DeleteAllBucketsAsync()
     {
         var buckets = await _bucketOperations.ListBucketsAsync(cancellationToken);

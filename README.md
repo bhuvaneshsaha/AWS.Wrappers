@@ -2,11 +2,13 @@
 # AWS S3 Wrappers
 
 [![.NET](https://github.com/bhuvaneshsaha/AWS.Wrappers/actions/workflows/dotnet.yml/badge.svg)](https://github.com/bhuvaneshsaha/AWS.Wrappers/actions/workflows/dotnet.yml)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=bhuvaneshsaha&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=bhuvaneshsaha)
 [![CodeFactor](https://www.codefactor.io/repository/github/bhuvaneshsaha/aws.wrappers/badge)](https://www.codefactor.io/repository/github/bhuvaneshsaha/aws.wrappers)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/14753260313949559c4c9012cb70bc97)](https://app.codacy.com/gh/bhuvaneshsaha/AWS.Wrappers/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 [![Codacy Badge](https://app.codacy.com/project/badge/Coverage/14753260313949559c4c9012cb70bc97)](https://app.codacy.com/gh/bhuvaneshsaha/AWS.Wrappers/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_coverage)
 [![codecov](https://codecov.io/gh/bhuvaneshsaha/AWS.Wrappers/branch/master/graph/badge.svg?token=CL7JXQF2MI)](https://codecov.io/gh/bhuvaneshsaha/AWS.Wrappers)
 [![Open Source Helpers](https://www.codetriage.com/bhuvaneshsaha/aws.wrappers/badges/users.svg)](https://www.codetriage.com/bhuvaneshsaha/aws.wrappers)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fbhuvaneshsaha%2FAWS.Wrappers.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fbhuvaneshsaha%2FAWS.Wrappers?ref=badge_shield)
 
 ![Image Caption](https://codecov.io/gh/bhuvaneshsaha/AWS.Wrappers/branch/master/graphs/icicle.svg?token=CL7JXQF2MI)
 
@@ -95,3 +97,7 @@ Please find the available methods below
 |-----------------------------------------------|--------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | GeneratePresignedUrlForGetAsync (Pending) | Generates a presigned URL for a GET request to an S3 object. | Provide the bucket name, object key, expiration time, and a cancellation token. Returns the presigned URL as a string.               | var url = await presignedUrlOperations.GeneratePresignedUrlForGetAsync("bucket-name", "object-key", DateTime.UtcNow.AddMinutes(5), cancellationToken);               |
 | GeneratePresignedUrlForPutAsync (Pending) | Generates a presigned URL for a PUT request to an S3 object. | Provide the bucket name, object key, expiration time, content type, and a cancellation token. Returns the presigned URL as a string. | var url = await presignedUrlOperations.GeneratePresignedUrlForPutAsync("bucket-name", "object-key", DateTime.UtcNow.AddMinutes(5), "image/jpeg", cancellationToken); |
+
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fbhuvaneshsaha%2FAWS.Wrappers.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fbhuvaneshsaha%2FAWS.Wrappers?ref=badge_large)
