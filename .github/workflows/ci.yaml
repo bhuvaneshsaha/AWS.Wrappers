@@ -36,6 +36,11 @@ jobs:
       run: |
           mkdir -p coverage
           cp AWS.S3.Wrapper.Tests/TestResults/*/coverage.cobertura.xml coverage/coverage.cobertura.xml
+    - name: Upload coverage reports to Codacy
+      uses: codacy/codacy-coverage-reporter-action@v1.1.0
+      with:
+        project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
+        coverage-reports: coverage/coverage.cobertura.xml
     - name: Install cURL
       run: sudo apt-get install curl -y
     - name: Download and run Codacy script
