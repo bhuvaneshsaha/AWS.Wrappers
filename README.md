@@ -1,7 +1,7 @@
 ﻿
 # AWS S3 Wrappers
 
-[![.NET](https://github.com/bhuvaneshsaha/AWS.Wrappers/actions/workflows/dotnet.yml/badge.svg)](https://github.com/bhuvaneshsaha/AWS.Wrappers/actions/workflows/dotnet.yml)
+[![CI Pipeline](https://github.com/bhuvaneshsaha/AWS.Wrappers/actions/workflows/ci.yaml/badge.svg)](https://github.com/bhuvaneshsaha/AWS.Wrappers/actions/workflows/ci.yaml)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=bhuvaneshsaha&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=bhuvaneshsaha)
 [![CodeFactor](https://www.codefactor.io/repository/github/bhuvaneshsaha/aws.wrappers/badge)](https://www.codefactor.io/repository/github/bhuvaneshsaha/aws.wrappers)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/14753260313949559c4c9012cb70bc97)](https://app.codacy.com/gh/bhuvaneshsaha/AWS.Wrappers/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
