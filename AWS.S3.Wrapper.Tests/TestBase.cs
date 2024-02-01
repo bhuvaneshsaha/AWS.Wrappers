@@ -1,6 +1,6 @@
 
 namespace AWS.S3.Wrapper.Tests;
-public class TestBase
+public class TestBase : IDisposable
 {
     protected readonly IAmazonS3 client = new AmazonS3Client(Environment.GetEnvironmentVariable("AWS_ACCESS_KEY_ID"), Environment.GetEnvironmentVariable("AWS_SECRET_ACCESS_KEY"), Amazon.RegionEndpoint.USEast1);
     protected readonly IBucketOperations _bucketOperations;
@@ -11,6 +11,10 @@ public class TestBase
     protected readonly IPresignedUrlOperations _presignedUrlOperations;
     protected readonly string _bucketPrefix = "my-unit-test-bucket";
     protected readonly CancellationToken cancellationToken = default;
+
+    protected readonly List<string> _createdBucketNames = new();
+    private bool _disposedValue;
+    
     public TestBase()
     {
         _bucketOperations = new BucketOperations(client);
@@ -36,5 +40,28 @@ public class TestBase
         }
 
         Assert.True(true);
+    }
+
+    protected virtual async Task Dispose(bool disposing)
+    {
+        if (!_disposedValue)
+        {
+            if (disposing)
+            {
+                foreach (var bucketName in _createdBucketNames)
+                {
+                    await _bucketOperations.EmptyBucketAsync(bucketName, cancellationToken);
+                    await _bucketOperations.DeleteBucketAsync(bucketName, cancellationToken);
+                }
+            }
+
+            _disposedValue = true;
+        }
+    }
+
+    public void Dispose()
+    {
+        Dispose(disposing: true).Wait();
+        GC.SuppressFinalize(this);
     }
 }

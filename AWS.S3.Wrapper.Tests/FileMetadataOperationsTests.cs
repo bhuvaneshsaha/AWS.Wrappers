@@ -4,10 +4,8 @@ using System.Text;
 namespace AWS.S3.Wrapper.Tests;
 
 [Collection("Our Test Collection #1")]
-public class FileMetadataOperationsTests : TestBase, IDisposable
+public class FileMetadataOperationsTests : TestBase
 {
-    private readonly List<string> _createdBucketNames = new();
-
     [Fact]
     public async Task GetObjectMetadataAsync_ShouldGetAddedMetadataOfS3Object()
     {
@@ -43,13 +41,5 @@ public class FileMetadataOperationsTests : TestBase, IDisposable
         Assert.Equal(metadataOutput, actualMetadata);
 
         _createdBucketNames.Add(bucketName);
-    }
-    public void Dispose()
-    {
-        foreach (var bucketName in _createdBucketNames)
-        {
-            _bucketOperations.EmptyBucketAsync(bucketName, cancellationToken).Wait();
-            _bucketOperations.DeleteBucketAsync(bucketName, cancellationToken).Wait();
-        }
     }
 }

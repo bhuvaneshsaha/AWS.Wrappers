@@ -2,10 +2,8 @@
 namespace AWS.S3.Wrapper.Tests;
 
 [Collection("Our Test Collection #1")]
-public class DirectoryOperationsTests : TestBase, IDisposable
+public class DirectoryOperationsTests : TestBase
 {
-    private readonly List<string> _createdBucketNames = new();
-
     [Fact]
     public async Task CreateDirectoryAsync_ShouldCreateDirectory()
     {
@@ -100,14 +98,5 @@ public class DirectoryOperationsTests : TestBase, IDisposable
         Assert.Empty(directories);
 
         _createdBucketNames.Add(bucketName);
-    }
-
-    public void Dispose()
-    {
-        foreach (var bucketName in _createdBucketNames)
-        {
-            _bucketOperations.EmptyBucketAsync(bucketName, cancellationToken).Wait();
-            _bucketOperations.DeleteBucketAsync(bucketName, cancellationToken).Wait();
-        }
     }
 }

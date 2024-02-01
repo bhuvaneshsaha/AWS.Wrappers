@@ -2,10 +2,8 @@
 namespace AWS.S3.Wrapper.Tests;
 
 [Collection("Our Test Collection #1")]
-public class FileOperationsTests : TestBase, IDisposable
+public class FileOperationsTests : TestBase
 {
-    private readonly List<string> _createdBucketNames = new();
-
     [Fact]
     public async Task PutFileAsync_FileShouldUpload()
     {
@@ -153,14 +151,5 @@ public class FileOperationsTests : TestBase, IDisposable
         Assert.False(actualContent);
 
         _createdBucketNames.Add(bucketName);
-    }
-
-    public void Dispose()
-    {
-        foreach (var bucketName in _createdBucketNames)
-        {
-            _bucketOperations.EmptyBucketAsync(bucketName, cancellationToken).Wait();
-            _bucketOperations.DeleteBucketAsync(bucketName, cancellationToken).Wait();
-        }
     }
 }
