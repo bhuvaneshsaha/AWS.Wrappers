@@ -1,10 +1,8 @@
 
 namespace AWS.S3.Wrapper.Tests;
 
-public class PresignedUrlOperationsTests : TestBase, IDisposable
+public class PresignedUrlOperationsTests : TestBase
 {
-    private readonly List<string> _createdBucketNames = new();
-
     [Fact]
     public async Task GeneratePresignedUrlForGetAsync_ShouldGetPresignedURLOfUpload()
     {
@@ -43,14 +41,5 @@ public class PresignedUrlOperationsTests : TestBase, IDisposable
         var preSignedPutURL = await _presignedUrlOperations.GeneratePresignedUrlForPutAsync(bucketName, objectKey, expires, contentType, cancellationToken);
 
         Assert.NotEmpty(preSignedPutURL);
-    }
-
-    public void Dispose()
-    {
-        foreach (var bucketName in _createdBucketNames)
-        {
-            _bucketOperations.EmptyBucketAsync(bucketName, cancellationToken).Wait();
-            _bucketOperations.DeleteBucketAsync(bucketName, cancellationToken).Wait();
-        }
     }
 }

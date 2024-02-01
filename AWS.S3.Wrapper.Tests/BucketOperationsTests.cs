@@ -3,10 +3,8 @@
 namespace AWS.S3.Wrapper.Tests;
 
 [Collection("Our Test Collection #1")]
-public class BucketOperationsTests : TestBase, IDisposable
+public class BucketOperationsTests : TestBase
 {
-    private readonly List<string> _createdBucketNames = new();
-
     [Fact]
     public async Task CreateBucketAsync_ShouldCreateBucketAsync()
     {
@@ -68,13 +66,5 @@ public class BucketOperationsTests : TestBase, IDisposable
 
         // Assert
         Assert.False(await _bucketOperations.DoesBucketExistAsync(bucketName, cancellationToken));
-    }
-
-    public void Dispose()
-    {
-        foreach (var bucketName in _createdBucketNames)
-        {
-            _bucketOperations.DeleteBucketAsync(bucketName, cancellationToken).Wait();
-        }
     }
 }

@@ -4,10 +4,8 @@ using AWS.S3.Wrapper.Tests.Utilities;
 namespace AWS.S3.Wrapper.Tests;
 
 [Collection("Our Test Collection #1")]
-public class LargeFileOperationsTests : TestBase, IDisposable
+public class LargeFileOperationsTests : TestBase
 {
-    private readonly List<string> _createdBucketNames = [];
-
     [Fact]
     public async Task UploadFullDirectoryAsync_ShouldUploadAllLocalFiles()
     {
@@ -53,14 +51,5 @@ public class LargeFileOperationsTests : TestBase, IDisposable
 
         // assert
         Assert.IsType<ArgumentException>(exception);
-    }
-    
-    public void Dispose()
-    {
-        foreach (var bucketName in _createdBucketNames)
-        {
-            _bucketOperations.EmptyBucketAsync(bucketName, cancellationToken).Wait();
-            _bucketOperations.DeleteBucketAsync(bucketName, cancellationToken).Wait();
-        }
     }
 }
