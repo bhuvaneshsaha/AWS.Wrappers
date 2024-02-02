@@ -12,7 +12,7 @@ public class TestBase : IDisposable
     protected readonly string _bucketPrefix = "my-unit-test-bucket";
     protected readonly CancellationToken cancellationToken = default;
 
-    protected readonly List<string> _createdBucketNames = new();
+    protected readonly List<string> _createdBucketNames = [];
     private bool _disposedValue;
     
     public TestBase()
@@ -26,7 +26,9 @@ public class TestBase : IDisposable
     }
 
     // List and delete all buckets with the prefix my-unit-test-bucket
+#pragma warning disable xUnit1004 // Test methods should not be skipped
     [Fact(Skip = "For cleanup only")]
+#pragma warning restore xUnit1004 // Test methods should not be skipped
     protected async Task DeleteAllBucketsAsync()
     {
         var buckets = await _bucketOperations.ListBucketsAsync(cancellationToken);
